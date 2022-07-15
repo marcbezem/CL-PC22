@@ -1,4 +1,4 @@
-# PC22
+# PC-22
 Coherent Logic at Proof and Computation, 2022
 
 Course material (TBD):
