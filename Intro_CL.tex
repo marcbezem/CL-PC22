@@ -19,6 +19,7 @@
 
 \usepackage{color}
 \newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
 
 %\usepackage[all]{xy}
 \usepackage{amssymb,amsmath}
@@ -33,13 +34,14 @@
 \newcommand{\imp}{\rightarrow}
 \newcommand{\liff}{\leftrightarrow}
 \newcommand{\proves}{\vdash}
+\newcommand{\deca}{${\lor}{\exists}{\land}$}
 
 \title{Coherent Logic --- an overview}
 \author{Marc Bezem\\
 Department of Informatics\\
 University of Bergen
 }
-\date{June 2016}
+\date{September 2022}
 
 \begin{document}
 
@@ -54,53 +56,90 @@ University of Bergen
 \subsection{Basics}
 
 \begin{frame}
-\frametitle{Coherent logic preliminaries}
+\frametitle{Coherent logic preliminaries 1}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
+    \item Fix a first-order signature $\Sigma$
     \item Positive formulas: built up from atoms using 
     $\top,\bot,\lor,\land,\exists$
-    \item Coherent implications (sentences): $\forall\vec{x}.~C \to D$ 
+    \item Coherent implications (sentences): $\forall\vec{x}.~(C \to D)$ 
     with $C,D$ positive formulas
     \item Coherent theory: axiomatized by coherent sentences
-    \item DECA-formula: 
-    $\exists \vec{y}.~A_1 \lor \cdots \lor A_k~(k\geq 0)$
-    with each $A_i$ a (possibly empty) conjunction of atoms
-    \item Every positive formula is (constructively) equivalent to
-    a DECA-formula. Proof by induction:
+    \item \deca-formula: 
+    $(\exists\vec{y}_1.A_1) \lor \cdots \lor (\exists\vec{y}_k.A_k)$,
+    $k\geq 0$, with each $A_i$ a (possibly empty) conjunction of atoms
+    \item Theorem 1. Every positive formula is (constructively) equivalent to
+    a \deca-formula. Proof by induction:
     \begin{itemize}[<+->]   %  [<+-| alert@+>]
-    \item Base cases: $\bot$ (empty $\lor$), $\bot$ (one empty $\land$)
-    \item Induction cases: $\lor$ trivial; 
-    $\land$ (distributivity + $\exists x. \varphi \land \exists y.\psi$ iff 
-                              $\exists xy. \varphi\land\psi$);
+    \item Base cases: atom (one disjunct, empty $\exists$, one conjunct);\\ 
+    $\bot$ (empty $\lor$); 
+    $\top$ (one disjunct with empty $\exists,\land$)
+    \item Induction cases: $\lor$ (trivial); 
+    $\land$ (distributivity + $(\exists x.\varphi) \land (\exists y.\psi)$ iff 
+                              $\exists xy.~(\varphi\land\psi)$);
     $\exists$ (commutes with $\vee$)    
     \end{itemize}
  \end{itemize}
 \end{frame}
 
-
 \begin{frame}
-\frametitle{CL as fragment of FOL}
+\frametitle{Coherent logic preliminaries 2}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
-    \item Closed formulas of the form $\alert{\forall\vec{x}.}~C \to D$ \alert{(scope!)}, where ...
-    \item $C$ a conjunction of atoms $A_1 \land \cdots \land A_n~(n\geq 0)$
-    \item $D$ a disjunction $E_1 \lor \cdots \lor E_m~(m\geq 0)$, where ...
-    \item each $E_i$ is a formula of the form $\exists \vec{y}.~B_1 \land \cdots \land B_k~(k\geq 0)$
-              where each $B_j$ is an atom ($\vec{y}, B_j, k$ may depend on $i$)
-    \item Short forms, implicitly universally closed: 
-    \begin{itemize}
-       \item $\top$ for empty conjunction, $\bot$ for empty disjunction         
-       \item $E$ (as above) for $\forall \vec x.~\top\to E$
-       \item $(A_1 \land \cdots \land A_n)\to(B_1 \lor \cdots \lor B_m)$, resolution clauses
-       \item $(A_1 \land \cdots \land A_n)\to \exists y.~B$, one existential quantifier
-    \end{itemize}
+    \item Theorem 2. Every coherent implication is (constructively) 
+    equivalent to a finite set of coherent implications
+    $\forall\vec{x}.~(C \to D)$ 
+    with $C$ a conjunction of atoms and $D$ a \deca-formula
+    \item Proof. Use Thm.1 to replace $C$ and $D$ by \deca-formulas.
+    Then use $(\varphi\lor\psi)\to D$ iff $(\varphi\to D)\land(\psi\to D)$,
+    and $(\exists y.\varphi)\to D$ iff $\forall y.~(\varphi\to D)$
+    \item Notation: we use the format of Theorem 2, 
+    leaving out the universal prefix, and omitting the premiss $C\to{}$ 
+    if $C\equiv\top$
+    \item Discuss: $\exists y.\top$ and $\exists y.\bot$ and
+    $\forall y.\top$ and $\forall y.\bot$
+    \item Full compliance with Tarski semantics if $\Sigma$ has a constant
  \end{itemize}
 \end{frame}
 
 \begin{frame}
+\frametitle{Examples}
+ \begin{itemize}[<+->]   %  [<+-| alert@+>]
+    \item all usual equality axioms, including congruence
+    \item $p\lor np$ and $p\land np\to\bot$ 
+    (NB $p\lor\neg p$ is \red{not} coherent)
+    \item lattice theory: $%\forall x,y.~
+    \exists z.~\mathit{meet}(x,y,z)$
+    \item geometry: $%\forall x,y.~
+    p(x)\land p(y) \to \exists z.~\ell(z) \land i(x,z) \land i(y,z)$
+    \item rewriting: $%\forall x,y,z.~
+    r(x,y)\land r(x,z) \to \exists u.~r(y,u)\land r(z,u)$
+    \item weak-tc-elim: $%\forall x,y.~
+    r^*(x,y)\to (x=y)\lor\exists z.~r(x,z)\land r^*(z,y)$     
+    \item seriality: $%\forall x.~
+    \exists y.~s(x,y)$ (who needs a function?)
+    \item field theory: $%\forall x.~
+    (x=0) \lor \exists y.~(x\cdot y=1)$
+    \item local ring: 
+    $\exists y.~(x\cdot y = 1) \lor (\exists y.~((1-x)\cdot y = 1)$
+ \end{itemize}
+\end{frame}
+
+
+\begin{frame}
 \frametitle{History of CL}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
-    \item Skolem (20s):  lattice theory and projective geometry
-    \item Grothendieck (70s): geometric morphisms preserve geometric
-              logic (= coherent logic + infinitary disjunction)
+    \item Skolem (1920s): coherent formulations of lattice theory 
+    and projective geometry, calling the axioms ``Erzeugungsprinzipien"
+    (production rules), anticipating ground forward reasoning. Using CL:
+    \begin{itemize}[<+->]   %  [<+-| alert@+>]
+    \item Skolem solved a decision problem in lattice theory
+    \item Skolem gave a method to test dependence from the axioms
+    of plane projective geometry   
+    \end{itemize}
+    
+    \item Grothendieck (1960s): geometric morphisms preserve geometric
+              logic (= coherent logic + infinitary disjunction).
+    This is quite complicated, but we'll see a glimpse of the (related)
+    forcing semantics later.
     %\item Janicic, Kordic (90s): geometry prover Euclid
     %\item Abdennadher, Sch\"utz (90s): \alert CPUHR (\alert Constraints)
     %\item B, Coquand, Fisher, Nivelle (00s): geometric/coh.\ logic
@@ -108,25 +147,6 @@ University of Bergen
  \end{itemize}
 \end{frame}
 
-\begin{frame}
-\frametitle{Examples}
- \begin{itemize}[<+->]   %  [<+-| alert@+>]
-    \item lattice theory: $%\forall x,y.~
-    \exists z.~\mathit{meet}(x,y,z)$
-    \item geometry: $%\forall x,y.~
-    p(x)\land p(y) \to \exists z.~\ell(z) \land i(x,z) \land i(y,z)$
-    \item rewriting: $%\forall x,y,z.~
-    r(x,y)\land r(x,z) \to \exists u.~r(y,u)\land r(z,u)$
-    \item fol-tc: $%\forall x,y.~
-    r^*(x,y)\to (x=y)\lor\exists z.~r(x,z)\land r^*(z,y)$     
-    \item seriality: $%\forall x.~
-    \exists y.~s(x,y)$ (who needs a function?)
-    \item field theory: $%\forall x.~
-    (x=0) \lor \exists y.~(x\cdot y=1)$
-    \item non-empty domain: $\exists x.~\top$
-%    \item non-empty domain: $\exists x.~\top$
- \end{itemize}
-\end{frame}
 
 \begin{frame}
 \frametitle{A proof theory for CL}
