@@ -51,7 +51,7 @@ University of Bergen
 \frame{\tableofcontents}
 
 
-\section{Crash course in CL}
+\section{Crash course in Coherent Logic (CL)}
 
 \subsection{Basics}
 
@@ -129,17 +129,17 @@ University of Bergen
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
     \item Skolem (1920s): coherent formulations of lattice theory 
     and projective geometry, calling the axioms ``Erzeugungsprinzipien"
-    (production rules), anticipating ground forward reasoning. Using CL:
+    (production rules), anticipating ground forward reasoning. Using CL,
     \begin{itemize}[<+->]   %  [<+-| alert@+>]
     \item Skolem solved a decision problem in lattice theory
-    \item Skolem gave a method to test dependence from the axioms
-    of plane projective geometry   
+    \item Skolem gave a method to test in/dependence from the axioms
+    of plane projective geometry (example: Desargues' Axiom)
     \end{itemize}
     
     \item Grothendieck (1960s): geometric morphisms preserve geometric
               logic (= coherent logic + infinitary disjunction).
-    This is quite complicated, but we'll see a glimpse of the (related)
-    forcing semantics later.
+    This is quite complicated, but we'll see a glimpse
+    in the forcing semantics of coherent logic given later.
     %\item Janicic, Kordic (90s): geometry prover Euclid
     %\item Abdennadher, Sch\"utz (90s): \alert CPUHR (\alert Constraints)
     %\item B, Coquand, Fisher, Nivelle (00s): geometric/coh.\ logic
@@ -151,29 +151,74 @@ University of Bergen
 \begin{frame}
 \frametitle{A proof theory for CL}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
-    \item Ground forward chaining with case distinction and introduction of witnesses
-(ground tableau reasoning)
-    \item Inductive definition of $\set{F_0,\ldots,F_{n-1}}\vdash_\Gamma F$ possible %(see papers)
-    \item Example: infer $r$ from $p\lor \exists x.~q(x),~p\to\bot,~q(y)\to r$
+    \item In short: ground forward reasoning with case distinction and
+    introduction of witnesses (ground tableau reasoning)
+    \item In full: define inductively $\Gamma\vdash_{\vec{y}}^T A$, where 
+    $A$ ($\Gamma$) atom (set of atoms) with all variables in $\vec{y}$, in case
+    \begin{enumerate}
+    \item[(base)] $A$ is in $\Gamma$, or in case 
+    \item[(step)] $T$ has an axiom $\forall\vec{x}.~
+    (C \to (\exists\vec{y}_1.B_1) \lor \cdots \lor (\exists\vec{y}_k.B_k))$
+    such that for some sequence of terms $\vec{t}$ with variables in $\vec{y}$
+    we have
+    \begin{itemize}
+    \item $C[\vec{t}/\vec{x}]$ is a subset of $\Gamma$, and
+    \item $\Gamma,B_i[\vec{t}/\vec{x}]\vdash^T_{\vec{y},\vec{y_i}} A
+          ~\text{for all $i = 1,\dots,n$}$ \quad
+          (\red{NB $\vec{y_i}$ fresh wrt $\vec{y}$})
+    \end{itemize}
+    \end{enumerate}
+    \item Rough visualization as a tree with inner nodes like 
+    \[
+\infer[\mathit{axiom}]{\Gamma}{\Gamma,B_1[\vec{t}/\vec{x}] \quad\cdots\quad \Gamma,B_n[\vec{t}/\vec{x}]}
+    \]
+    \item NB we omit conclusion $A$ in all the nodes, 
+    but we should actually keep track of the $\vec{y},\vec{y_i}$.
+    Looking ahead, pairs like $(\vec{y},\Gamma)$ will be
+    the forcing conditions, $\approx$ finite Kripke worlds.
+ \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Example of a derivation in CL}
+ \begin{itemize}[<+->]   %  [<+-| alert@+>]   
+    \item Let $T$ consists of $p\lor \exists x.~q(x)$ 
+    and $p\to\bot$ and $q(y)\to r$
+    \item Derivation tree for $\emptyset\vdash_{\emptyset}^T r$
     \[
 \infer[p\vee \exists x.~q(x)]{\emptyset}
 {
 \infer[p\to\bot]{\set{p}}{(\bot)} & \infer[q(y)\to r]{\set{q(c)}}{\set{q(c),r}}
 }
 \]
-    \item Close branch if conclusion has been inferred,
-    or $\bot$ (zero cases); stop if no new info can be inferred (model found!) 
-    \item Proof steps are simple and intuitive (but can be many)
-    \item Easy conversion of tableau to natural deduction, lambda term, or stylized natural language
+    \item Search procedure: until all branches are closed,
+    \begin{enumerate}
+    \item pick an open leaf node with some $\Gamma$
+    \item if $\Gamma$ contains the conclusion $A$, close the branch
+    \item otherwise, pick \red{fairly a $\Gamma$-false 
+    instance} of an axiom of $T$    
+    \begin{itemize}
+    \item[3a] if no such instance exists, $\Gamma$ is a model and $A$ underivable
+    \item[3b] else if the conclusion of the instance is $\bot$, close the branch
+    \item[3c] otherwise, extend the branch according to the instance 
+    \end{itemize}
+    \end{enumerate}
+    \item The search procedure stops iff $A$ is derivable
+    %\item Proof steps are simple and intuitive (but can be many)
+    %\item Easy conversion of tableau to natural deduction, lambda term, or stylized natural language
  \end{itemize}
 \end{frame}
 
 \subsection{Metatheory}
 
 \begin{frame}
-\frametitle{Meta (Tarski semantics)}
+\frametitle{Soundness and completeness wrt the Tarski semantics}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
-    \item Soundness easily proved by induction (constructive)
+    \item Soundness easily proved by induction on $\Gamma\vdash_{\vec{y}}^T A$
+    \item Not complete: $\emptyset\vdash_{\vec{\emptyset}}^{\forall x.\bot} p$
+    underivable without a constant in the signature!
+    \item So, let's assume a constant in the signature
     \item Refutation completeness: assume $T$ has no models. Do forward reasoning in
 an exhaustive and fair way. Every infinite branch would constitute
 a model (why? fair!), which is impossible. By K\"onig's Lemma the tree must be finite,
@@ -535,3 +580,27 @@ Coquand
 \end{frame}
 
 \end{document}
+
+We define inductively when we have $\Gamma\vdash_{\vec{x}}^T A$ 
+where $A$ is a atomic formula and $\Gamma$ a set of atomic formulae,
+and all free variables of $\Gamma,A$ are in $\vec{x}$. There are two clauses:
+
+\begin{enumerate}
+\item (base) $A$ is in $\Gamma$ 
+
+\item (step) there is an axiom 
+$$
+\Delta_0(\vec{y})~\vdash_{\vec{y}}~
+\exists \vec{z_1}\Delta_1(\vec{y},\vec{z_1})\vee\dots\vee\exists \vec{z_n}\Delta
+_n(\vec{y},\vec{z_n})
+$$
+in $T$ and a sequence of terms $\vec{t}$ with variables in $\vec{x}$,
+such that $\Delta_0(\vec{t})$ is a subset of $\Gamma$ and
+we have 
+$$
+\Gamma,\Delta_i(\vec{t},\vec{z_i})\vdash^T_{\vec{x},\vec{z_i}} A
+\quad \text{for all $i = 1,\dots,n$.}
+$$
+Here and below we write $\Gamma,\Delta$ for the union of $\Gamma$ and $\Delta$.
+\end{enumerate}
+
