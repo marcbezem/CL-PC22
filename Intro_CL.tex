@@ -58,7 +58,7 @@ University of Bergen
 \begin{frame}
 \frametitle{Coherent logic preliminaries 1}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
-    \item Fix a first-order signature $\Sigma$
+    \item Fix a finite first-order signature $\Sigma$
     \item Positive formulas: built up from atoms using 
     $\top,\bot,\lor,\land,\exists$
     \item Coherent implications (sentences): $\forall\vec{x}.~(C \to D)$ 
@@ -67,7 +67,7 @@ University of Bergen
     \item \deca-formula: 
     $(\exists\vec{y}_1.A_1) \lor \cdots \lor (\exists\vec{y}_k.A_k)$,
     $k\geq 0$, with each $A_i$ a (possibly empty) conjunction of atoms
-    \item Theorem 1. Every positive formula is (constructively) equivalent to
+    \item Lemma 1. Every positive formula is (constructively) equivalent to
     a \deca-formula. Proof by induction:
     \begin{itemize}[<+->]   %  [<+-| alert@+>]
     \item Base cases: atom (one disjunct, empty $\exists$, one conjunct);\\ 
@@ -84,14 +84,14 @@ University of Bergen
 \begin{frame}
 \frametitle{Coherent logic preliminaries 2}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
-    \item Theorem 2. Every coherent implication is (constructively) 
+    \item Lemma 2. Every coherent implication is (constructively) 
     equivalent to a finite set of coherent implications
     $\forall\vec{x}.~(C \to D)$ 
     with $C$ a conjunction of atoms and $D$ a \deca-formula
     \item Proof. Use Thm.1 to replace $C$ and $D$ by \deca-formulas.
     Then use $(\varphi\lor\psi)\to D$ iff $(\varphi\to D)\land(\psi\to D)$,
     and $(\exists y.\varphi)\to D$ iff $\forall y.~(\varphi\to D)$
-    \item Notation: we use the format of Theorem 2, 
+    \item Notation: we use the format of Lemma 2, 
     leaving out the universal prefix, and omitting the premiss $C\to{}$ 
     if $C\equiv\top$
     \item Discuss: $\exists y.\top$ and $\exists y.\bot$ and
@@ -204,7 +204,7 @@ University of Bergen
     \item[3c] otherwise, extend the branch according to the instance 
     \end{itemize}
     \end{enumerate}
-    \item The search procedure stops iff $A$ is derivable
+    \item The search procedure stops iff $A$ is derivable (\red{if-part!})
     %\item Proof steps are simple and intuitive (but can be many)
     %\item Easy conversion of tableau to natural deduction, lambda term, or stylized natural language
  \end{itemize}
@@ -213,131 +213,181 @@ University of Bergen
 \subsection{Metatheory}
 
 \begin{frame}
-\frametitle{Soundness and completeness wrt the Tarski semantics}
+\frametitle{Soundness and completeness wrt Tarski semantics}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
     \item Soundness easily proved by induction on $\Gamma\vdash_{\vec{y}}^T A$
-    \item Not complete: $\emptyset\vdash_{\vec{\emptyset}}^{\forall x.\bot} p$
-    underivable without a constant in the signature!
-    \item So, let's assume a constant in the signature
-    \item Refutation completeness: assume $T$ has no models. Do forward reasoning in
-an exhaustive and fair way. Every infinite branch would constitute
-a model (why? fair!), which is impossible. By K\"onig's Lemma the tree must be finite,
-with all finite branches closed by $\bot$ (no models!). Hence the tree is a proof of 
-$\bot$.  
-    \item Completeness for arbitrary facts: very similar
-    \item Completeness for arbitrary coherent formulas: ... (explain)
+    \item \red{Not} complete: $\emptyset\vdash_{\emptyset}^{\forall x.\bot} p$
+    underivable without a constant in $\Sigma$
+    \item Silly, let's assume a constant in $\Sigma$, or just $\exists x.\top$
+    \item Proof of completeness: essentially non-constructive.
+   %\item 
+    Assume $\forall\vec{y}.~(\Gamma \to A)$ holds in any model of $T$.
+    Do the proof search procedure for $\Gamma\vdash_{\vec{y}}^T A$.
+    If it stops we have a proof. If not, the tree has an infinite branch
+    by K\"onig's Lemma. Collect the set of variables $Y$ and the set
+    of atoms $M$ along the infinite branch. Build a model with domain
+    $\mathrm{Tm}^\Sigma(Y)$ and positive diagram $M$. This is a model of
+    $T$ (\red{by fairness}) containing $\Gamma$ but not $A$. Contradiction.
+ 
+    \item Proof theory easily extended to arbitrary coherent formulas
  \end{itemize}
 \end{frame}
 
 \begin{frame}
-\frametitle{Meta (ctnd)}
+\frametitle{Metatheoretic results and remarks}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
     \item Corollary of completeness: 
     all classically provable coherent sentences are constructively provable
-    \item For \alert{geometric} logic this was discovered by Barr
-    \item Completeness and Barr's Theorem \alert{not constructive}
+    \item For \alert{geometric} logic this is called Barr's Theorem
+    \item Completeness and Barr's Theorem are \alert{not} constructive
+    \item Barr's Theorem for \red{coherent} logic can be proved 
+    constructively using a cut-elimination argument %(Coste \& Coste, Negri) 
     \item Coherent completeness wrt forcing semantics is constructively
-         provable, but does not give the conservativity of classical reasoning
-    \item NB: the forcing semantics is sound wrt intuitionistic logic for arbitrary formulas
- \end{itemize}
-\end{frame}
-
-
-\begin{frame}
-\frametitle{Rationale for automated reasoning}
- \begin{itemize}[<+->] %[<+->]   %  [<+-| alert@+>]
-    \item Expressivity of CL is between CNF (clauses) and FOL
-    \item Different balance: expressivity versus efficiency
-    \item Skolemization not necessary
-    \begin{itemize}
-       \item Skolemization makes the Herbrand Universe infinite
-       \item Why skolemize an axiom like $p(x,y)\to\exists z.~p(x,z)$?
-       \item Skolemization changes meaning
-       \item Skolem functions obfuscate symmetries
-       \item \alert{But: skolemized proofs can be exponentially shorter!}
-    \end{itemize}
+    provable, but does not give the conservativity of classical reasoning
+    \item NB: the forcing semantics is sound wrt intuitionistic logic 
+    for arbitrary formulas
  \end{itemize}
 \end{frame}
 
 \subsection{Translation from FOL to CL}
-
 \begin{frame}
 \frametitle{Translation from FOL to CL}
  \begin{itemize}[<+->]
-   \item NB: $\forall x.\,\varphi \to\bot$ only coherent for \alert{conjunctions of atoms} $\varphi$
-   \item A good start (but not for constructivists!): NNF
-   \item THM: Every FOL theory has a definitional extension that is equivalent to a CL theory
-   \item Proof: introduce two new predicates $T(\varphi),F(\varphi)$ for each subformula $\varphi$, with as parameters the free variables of $\varphi$.
- Use the rules for signed tableaux as coherent definitions (see next).
-Add $T(\psi)$ for every $\psi$ in the theory
- \item Base cases: $\forall\vec x.\,T(p) \lor F(p)$, $\forall\vec x.\,T(p) \land F(p) \imp \bot$
-(\alert{!})
-\item Propositional connectives: as expected (but a lot of variation possible)
- \end{itemize}
+   \item Idea: introduce two new predicate symbols 
+   $T(\psi),F(\psi)$ for each subformula $\psi$, 
+   with arity the number of free variables of $\psi$.
+   The rules for signed tableaux are coherent axioms:
+   \begin{itemize} 
+   \item 
+ if $\psi(\vec{x})\equiv\psi_1\wedge\psi_2$,
+$\left\{\begin{array}{ll}
+T(\psi)(\vec{x})\to T(\psi_1)(\vec{x})\wedge T(\psi_2)(\vec{x})\\
+F(\psi)(\vec{x})\to F(\psi_1)(\vec{x})\vee F(\psi_2)(\vec{x})
+\end{array}\right.$
+
+\item
+
+ if $\psi(\vec{x})\equiv\psi_1\vee \psi_2$ then ...
+%$\left\{\begin{array}{ll}
+%T(\psi)(\vec{x})\to T(\psi_1)(\vec{x})\vee T(\psi_2)(\vec{x})\\
+%F(\psi)(\vec{x})\to F(\psi_1)(\vec{x})\wedge F(\psi_2)(\vec{x})
+%\end{array}\right.$
+
+\item
+  if $\psi(\vec{x})\equiv\psi_1\to \psi_2$ then 
+$\left\{\begin{array}{ll}
+T(\psi)(\vec{x})\to F(\psi_1)(\vec{x})\vee T(\psi_2)(\vec{x})\\
+F(\psi)(\vec{x})\to T(\psi_1)(\vec{x})\wedge F(\psi_2)(\vec{x})
+\end{array}\right.$
+
+\item
+
+ if $\psi(\vec{x})\equiv\neg \psi_1$ then 
+$\left\{\begin{array}{ll}
+T(\psi)(\vec{x})\to F(\psi _1)(\vec{x})\\
+F(\psi)(\vec{x})\to T(\psi _1)(\vec{x})
+\end{array}\right.$
+
+\item
+
+ if $\psi(\vec{x})\equiv\forall y.\psi_1(\vec{x},y)$ then 
+$\left\{\begin{array}{ll}
+T(\psi)(\vec{x})\to T(\psi_1)(\vec{x},\red{y})\\
+F(\psi)(\vec{x})\to \exists y.F(\psi_1)(\vec{x},y)
+\end{array}\right.$
+
+\item
+
+ if $\psi(\vec{x})\equiv\exists y.\psi_1(\vec{x},y)$ then 
+$\left\{\begin{array}{ll}
+T(\psi)(\vec{x})\to \exists y.T(\psi_1)(\vec{x},y)\\
+F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
+\end{array}\right.$
+
+\item
+ if $\psi(\vec{x})$ is atomic then 
+ $(T(\psi)(\vec{x})\wedge F(\psi)(\vec{x})) \to \bot$
+ \end{itemize} 
+ \item By the completeness of tableaux: $\varphi$ is a tautology iff
+ $F(\varphi)\vdash^{Coh(\varphi)}_\emptyset \bot$, 
+ with $Coh(\varphi)$ as above
+ \end{itemize} 
 \end{frame}
- 
 
 \begin{frame}
-\frametitle{From FOL to CL (ctnd)}
- \begin{itemize}[<+->]
-\item Make coherent, using the smaller subformulas $T(\varphi),F(\varphi)$:
- \begin{itemize}
- \item $T(\forall x.~\varphi) \liff \neg\exists x.~F(\varphi)$
- \item $F(\forall x.~\varphi) \liff \exists x.~F(\varphi)$
- \end{itemize}
-\item Coherent formulas:
- \begin{itemize}
- \item $\forall x.~(T(\forall x.~\varphi) \to T(\varphi))$
- \item $T(\forall x.~\varphi) \lor \exists x.~F(\varphi)$
- \item $F(\forall x.~\varphi) \to \exists x.~F(\varphi)$
- \item $\forall x.~(F(\varphi) \to F(\forall x.~\varphi))$
- \end{itemize}
-\item Similarly for $T(\exists x.~\varphi),F(\exists x.~\varphi)$
-\item Optimization desirable and possible (Polonsky, PhD'11)
-\item Proof recovery: $T:= \lambda\varphi.\,\varphi$, $F:= \lambda\varphi.\,\neg\varphi$
-\item Translations steps are easily (classically) provable
-\end{itemize}
-\end{frame}
- 
-\begin{frame}
-\frametitle{Example: proving Peirce's Law}
+\frametitle{Example in propositional logic: Peirce's Law}
  \begin{itemize}[<+->] 
-    \item Peirce's Law: $((p\imp q)\imp p)\imp p$
-    \item Coherent theory:
+    \item Peirce's Law: $\varphi\equiv((p\imp q)\imp p)\imp p$
+    \item To prove: $F(((p\imp q)\imp p)\imp p) 
+    \vdash^{Coh(\varphi)}_\emptyset\bot$    
+    \item Part of $Coh(\varphi)$ that is actually used:
     \begin{enumerate}[<+->]
-    	\item $F(((p\imp q)\imp p)\imp p)$
-    	\item $F(((p\imp q)\imp p)\imp p) \imp T((p\imp q)\imp p) \wedge F(p)$
-    	\item $T((p\imp q)\imp p) \imp F(p\imp q) \vee T(p)$
-    	\item $F(p\imp q) \imp T(p) \wedge F(q)$
-    	\item $T(p) \wedge F(p) \imp \bot$
+    	%\item $F(((p\imp q)\imp p)\imp p)$
+    	\item $F(((p\imp q)\imp p)\imp p) \imp (T((p\imp q)\imp p) \wedge F(p))$
+    	\item $T((p\imp q)\imp p) \imp (F(p\imp q) \vee T(p))$
+    	\item $F(p\imp q) \imp (T(p) \wedge F(q))$
+    	\item $(T(p) \wedge F(p)) \imp \bot$
     \end{enumerate}
     \item Proof: use 1,2,3 and split on $F(p\imp q) \vee T(p)$, ...
-    \item Discussion: 
-    \begin{itemize}[<+->]
-      \item $T((p\imp q)\imp p) \imp F(p\imp q) \vee T(p)$ was a \emph{choice}
-      \item Why not $T((p\imp q)\imp p) \wedge T(p\imp q) \imp T(p)$ ?
-      \item Then you would need $F(p\imp q) \vee T(p\imp q)$ ...
-      \item Signed tableaux: positive and negative rules  %(not all needed here)
-  %  \item Sometimes no disjunctions needed: $p\imp q, p \proves q$
-     \item Polonsky's translation looks for optimal polarities
- \end{itemize}  
+    \item Details on the blackboard
+    \item Proof of $\varphi$: take $T\equiv\lambda\varphi.\,\varphi$,
+     $F\equiv\lambda\varphi.\,\neg\varphi$. Then $1,2,3,4$ are easy
+     (but classical), the CL proof is also a proof 
+     in propositional logic, and we finish by RAA
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Example in predicate logic: the Drinker's Paradox}
+ \begin{itemize}[<+->] 
+    \item Drinker's Paradox: $\varphi\equiv\exists x.~d(x)\to \forall y.d(y))$
+    \item To prove: $F(\exists x.~d(x)\to \forall y.d(y))) 
+    \vdash^{Coh(\varphi)}_\emptyset\bot$    
+    \item Part of $Coh(\varphi)$ that is actually used:
+    \begin{enumerate}[<+->]
+    	%\item $F(\exists x.~d(x)\to \forall y.d(y)))$
+    	\item \red{no} take-off without $\exists x. \top$, 
+    	alternative: prove $F(\varphi)\vdash^{Coh(\varphi)}_\set{\red{c}}\bot$
+    	\item $\forall\red{x}.~( F(\exists x.~d(x)\to \forall y.d(y))) \imp 
+    	F(d(\red{x})\to \forall y.d(y)))$
+    	\item $\forall\red{x}.~(F(d(\red{x})\to \forall y.d(y)) \imp 
+    	(T(d(\red{x})) \wedge F(\forall y.d(y))))$
+    	\item $F(\forall y.d(y)) \imp \exists y. F(d(y))$
+    	\item $\forall x.~(T(d(x)) \wedge F(d(x))) \imp \bot$   	
+    \end{enumerate}
+    \item Proof: use 1 and get $c$, instantiate 2 and 3 with $c$
+    and get $T(d(c)) \wedge F(\forall y.d(y))$, so by 4 we get $c'$
+    with $F(d(c'))$, ...
+    \item Details on the blackboard    
+    \item Proof of $\varphi$ in FOL: take $T\equiv\lambda\varphi.\,\varphi$,
+     $F\equiv\lambda\varphi.\,\neg\varphi$. Then $1,2,3,4$ are easy
+     (Tarski and classical), the CL proof is also a proof in FOL,
+     and we finish by RAA
  \end{itemize}
 \end{frame}
 
 
 \begin{frame}
-\frametitle{FOL vs CL, conclusions}
+\frametitle{Translation from FOL to CL (ctnd)}
  \begin{itemize}[<+->]
-\item Consequences in CL are always constructive
-\item Translation of FOL to CL contains many non-constructive steps,
-seemingly more than necessary
-\item Open problem: how to deal with \alert{intuitionistic} FOL tautologies
-in an optimal way?
-\item Moral: CL works best for theories that are (almost) coherent
-\item And: life ain't easy for a constructivist!
-\end{itemize}
+   \item Skolem (\red{1920}): Every FOL theory has a definitional 
+   extension that is equivalent to a $\forall\exists$ theory
+   \item Many variations possible (Polonsky, Dyckhoff\&Negri, Fisher, Mints)
+   \item Possible objectives: fewer new predicates, fewer CL axioms ...,
+   keeping a coherent axiom coherent
+   \item Polonsky proposed several improvements, starting from NNF,
+   flipping polarities, also using reversed tableaux rules
+   \item Dyckhoff\&Negri: add $(T(\psi)(\vec{x})) \to \psi)(\vec{x})$ 
+   and $(F(\psi)(\vec{x})\wedge \psi(\vec{x})) \to \bot$
+   for all atomic $\psi$ and obtain:
+   Every FOL theory has a positive semi-definitional extension 
+   that is equivalent to a CL theory
+   \item Consequences in CL are always constructive
+   \item Translation of FOL to CL contains many non-constructive steps,
+   often more than necessary
+ \end{itemize}
 \end{frame}
-
+ 
 \subsection{Elimination of function symbols}
 
 \begin{frame}
@@ -422,6 +472,24 @@ in an optimal way?
 \end{frame}
 
 \subsection{Automated reasoning}
+
+
+
+\begin{frame}
+\frametitle{Rationale for automated reasoning}
+ \begin{itemize}[<+->] %[<+->]   %  [<+-| alert@+>]
+    \item Expressivity of CL is between CNF (clauses) and FOL
+    \item Different balance: expressivity versus efficiency
+    \item Skolemization not necessary
+    \begin{itemize}
+       \item Skolemization makes the Herbrand Universe infinite
+       \item Why skolemize an axiom like $p(x,y)\to\exists z.~p(x,z)$?
+       \item Skolemization changes meaning
+       \item Skolem functions obfuscate symmetries
+       \item \alert{But: skolemized proofs can be exponentially shorter!}
+    \end{itemize}
+ \end{itemize}
+\end{frame}
 
 \weg{
 \begin{frame}
@@ -581,26 +649,11 @@ Coquand
 
 \end{document}
 
-We define inductively when we have $\Gamma\vdash_{\vec{x}}^T A$ 
-where $A$ is a atomic formula and $\Gamma$ a set of atomic formulae,
-and all free variables of $\Gamma,A$ are in $\vec{x}$. There are two clauses:
+For each subformula $\psi(\vec{x})$ of
+$\phi$ we introduce two atomic predicates $T(\psi)(\vec{x})$ and
+$F(\psi)(\vec{x})$ with the following coherent axioms
 
-\begin{enumerate}
-\item (base) $A$ is in $\Gamma$ 
 
-\item (step) there is an axiom 
-$$
-\Delta_0(\vec{y})~\vdash_{\vec{y}}~
-\exists \vec{z_1}\Delta_1(\vec{y},\vec{z_1})\vee\dots\vee\exists \vec{z_n}\Delta
-_n(\vec{y},\vec{z_n})
-$$
-in $T$ and a sequence of terms $\vec{t}$ with variables in $\vec{x}$,
-such that $\Delta_0(\vec{t})$ is a subset of $\Gamma$ and
-we have 
-$$
-\Gamma,\Delta_i(\vec{t},\vec{z_i})\vdash^T_{\vec{x},\vec{z_i}} A
-\quad \text{for all $i = 1,\dots,n$.}
-$$
-Here and below we write $\Gamma,\Delta$ for the union of $\Gamma$ and $\Delta$.
-\end{enumerate}
+
+
 
