@@ -20,6 +20,7 @@
 \usepackage{color}
 \newcommand{\blue}[1]{\textcolor{blue}{#1}}
 \newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\green}[1]{\textcolor{green}{#1}}
 
 %\usepackage[all]{xy}
 \usepackage{amssymb,amsmath}
@@ -372,12 +373,12 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
  \begin{itemize}[<+->]
    \item Skolem (\red{1920}): Every FOL theory has a definitional 
    extension that is equivalent to a $\forall\exists$ theory
-   \item Many variations possible (Polonsky, Dyckhoff\&Negri, Fisher, Mints)
+   \item Many variations possible (Polonsky, Dyckhoff \& Negri, Fisher, Mints)
    \item Possible objectives: fewer new predicates, fewer CL axioms ...,
    keeping a coherent axiom coherent
    \item Polonsky proposed several improvements, starting from NNF,
    flipping polarities, also using reversed tableaux rules
-   \item Dyckhoff\&Negri: add $(T(\psi)(\vec{x})) \to \psi)(\vec{x})$ 
+   \item Dyckhoff \& Negri: add $T(\psi)(\vec{x}) \to \psi(\vec{x})$ 
    and $(F(\psi)(\vec{x})\wedge \psi(\vec{x})) \to \bot$
    for all atomic $\psi$ and obtain:
    Every FOL theory has a positive semi-definitional extension 
@@ -393,13 +394,22 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
 \begin{frame}
 \frametitle{Elimination of function symbols}
  \begin{itemize}[<+->]
-    \item Predicates for constants: $c(x)$ for $c=x$, axiom $\exists x.\,c(x)$
-    \item Binary predicates for unary functions: $s(x,y)$ for $s(x)=y$, axiom $\exists y.\,s(x,y)$
-    \item Similarly: $(n{+}1)$-predicates for $n$-ary functions
-    \item Unicity, e.g., $c(x)\land c(y)\to x=y$, \alert{not} required! (Why?)
-    \item Example: e.g., $a=b$ becomes $a(x) \land b(y) \to x=y$
-    \item Equality almost vanishes: only needed between variables
-    \item Translation from FOL to CL eliminating functions: CUDEN (Nivelle and Meng, IJCAR 06)
+  \item Idea: use the graph instead of the function,
+  a new $(n{+}1)$-predicates for an $n$-ary function, for example:
+   \begin{itemize}[<+->]
+    \item For constants: $c(x)$ (expressing $c=x$), 
+     axiom $\exists x.\,c(x)$
+    \item For unary functions: 
+    $s(x,y)$ (expressing $s(x)=y$), axiom $\exists y.\,s(x,y)$
+   \end{itemize} 
+   \item Example: the term $f(s(x),o)$ leads to a condition
+   $s(x,y)\land o(u)\land f(y,u,z)$ after which every occurrence of
+   $f(s(x),o)$ is replaced by $z$. Then $\forall\vec{x}.~(C \to D)$ becomes 
+   $\forall x,y,u,z,\vec{x}~(s(x,y)\land o(u)\land f(y,u,z)\land C\to D')$ 
+   where $C',D'$ are the result of the substitution.
+   \item Example: $a=b$ becomes $a(x) \land b(y) \to x=y$   
+   \item Unicity, e.g., $c(x)\land c(y)\to x=y$, \alert{not} required!
+   (since the new conditions only occur in negative positions)
  \end{itemize}
 \end{frame}
 
@@ -407,9 +417,11 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
 \frametitle{Puzzle, formalized in CL with functions (Nivelle)} 
  \begin{itemize}[<+->]
      \item Can one color each
-     $n\in\nat$ either red or green but not both such that, if $n$ is red
-          then $n{+}2$ is green, and if  $n$ is green, then $n{+}1$ is red?
-    \item No: consider $r?gr\ldots$~ and~ $gr?gr\ldots$
+     $n\in\nat$ either red or blue but not both such that, 
+     if $\red{n}$ is red, then $\blue{n{+}2}$ is blue, 
+     and if  $\blue{n}$ is blue, then $\red{n{+}1}$ is red?
+    \item No: consider $\red{0}?\blue{2}\red{3}\ldots$
+    and $\blue{0}\red{1}?\blue{3}\red{4}\ldots$
     \item CL theory:
     \begin{enumerate}
        \item $r(x) \vee g(x)$ 
@@ -488,6 +500,9 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
        \item Skolem functions obfuscate symmetries
        \item \alert{But: skolemized proofs can be exponentially shorter!}
     \end{itemize}
+       
+   \item MOVE Equality almost vanishes: only needed between variables
+   \item Translation from FOL to CL eliminating functions: CUDEN (Nivelle and Meng, IJCAR 06)
  \end{itemize}
 \end{frame}
 
