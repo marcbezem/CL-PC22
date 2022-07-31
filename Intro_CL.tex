@@ -89,7 +89,7 @@ University of Bergen
     equivalent to a finite set of coherent implications
     $\forall\vec{x}.~(C \to D)$ 
     with $C$ a conjunction of atoms and $D$ a \deca-formula
-    \item Proof. Use Thm.1 to replace $C$ and $D$ by \deca-formulas.
+    \item Proof. Use Lemma 1 to replace $C$ and $D$ by \deca-formulas.
     Then use $(\varphi\lor\psi)\to D$ iff $(\varphi\to D)\land(\psi\to D)$,
     and $(\exists y.\varphi)\to D$ iff $\forall y.~(\varphi\to D)$
     \item Notation: we use the format of Lemma 2, 
@@ -141,10 +141,6 @@ University of Bergen
               logic (= coherent logic + infinitary disjunction).
     This is quite complicated, but we'll see a glimpse
     in the forcing semantics of coherent logic given later.
-    %\item Janicic, Kordic (90s): geometry prover Euclid
-    %\item Abdennadher, Sch\"utz (90s): \alert CPUHR (\alert Constraints)
-    %\item B, Coquand, Fisher, Nivelle (00s): geometric/coh.\ logic
-    %\item De Roo (00s): Euler (EYE, N3, Semantic Web)
  \end{itemize}
 \end{frame}
 
@@ -361,7 +357,7 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
     with $F(d(c'))$, ...
     \item Details on the blackboard    
     \item Proof of $\varphi$ in FOL: take $T\equiv\lambda\varphi.\,\varphi$,
-     $F\equiv\lambda\varphi.\,\neg\varphi$. Then $1,2,3,4$ are easy
+     $F\equiv\lambda\varphi.\,\neg\varphi$. Then 1--5 are easy
      (Tarski and classical), the CL proof is also a proof in FOL,
      and we finish by RAA
  \end{itemize}
@@ -388,6 +384,69 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
    often more than necessary
  \end{itemize}
 \end{frame}
+
+\subsection{Applications of CL}
+
+\begin{frame}
+\frametitle{Applications of CL}
+ \begin{itemize}[<+->]   %  [<+-| alert@+>]
+    \item simpler metatheory: proof theory, completeness, Skolem's Thm
+    \item metamathematics: independence, decision problems
+    \item automated reasoning
+    \item proof assistants    
+    \item model finding
+    \item constructive algebra
+ %   \item constraint handling (\alert{maybe CL is application of CHR} :-)
+ \end{itemize}
+\end{frame}
+
+
+\section{Automated reasoning in CL}
+
+\subsection{Automated reasoning}
+
+\begin{frame}
+\frametitle{Automated reasoning (AR)}
+ \begin{itemize}[<+->]   %  [<+-| alert@+>]
+  \item We focus on AR in (fragments of) FOL
+  \item There are dozens of FOL provers
+  \item TPTP is a large database of AR problems
+  \item There are a handful of CL provers, they are competitive on
+  CL problems but not on FOL problems:
+  \begin{itemize}[<+->]    
+   \item Geo (Nivelle)
+   \item Colog (Fisher)
+   \item Larus ( 
+  \end{itemize}
+  %\item Janicic, Kordic (90s): geometry prover Euclid
+    %\item Abdennadher, Sch\"utz (90s): \alert CPUHR (\alert Constraints)
+    %\item B, Coquand, Fisher, Nivelle (00s): geometric/coh.\ logic
+    %\item De Roo (00s): Euler (EYE, N3, Semantic Web)
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Rationale for automated reasoning in CL}
+ \begin{itemize}[<+->] %[<+->]   %  [<+-| alert@+>]
+    \item Expressivity of CL is between CNF (resolution) and FOL
+    \item Different balance: expressivity versus efficiency
+    \item Skolemization (elimination of $\exists$) not necessary
+    \begin{itemize}
+       \item Skolemization makes the Herbrand Universe infinite
+       \item Why skolemize an axiom like $p(x,y)\to\exists z.~p(x,z)$?
+       \item Skolemization changes meaning
+       \item Skolem functions obfuscate symmetries
+       \item \red{But}: skolemized proofs can be exponentially shorter!
+    \end{itemize}
+   \item Ground forward reasoning is very simple and intuitive
+   \item \red{But}: non-ground proofs can be exponentially shorter!   
+   \item MOVE Equality almost vanishes: only needed between variables
+   \item Translation from FOL to CL eliminating functions: CUDEN (Nivelle and Meng, IJCAR 06)
+ \end{itemize}
+\end{frame}
+
+
+
  
 \subsection{Elimination of function symbols}
 
@@ -439,10 +498,10 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
 \end{frame}
 
 \begin{frame}
-\frametitle{Puzzle, functions eliminated}
+\frametitle{Puzzle, function eliminated}
  \begin{itemize}[<+->]
     \item Living dangerously: demo of {\tt hdn.co} in Colog (Fisher, '12)
-    \item Just in case the demo fails:
+    \item Just in case the demo fails: refutation on blackboard
     \begin{enumerate}
       \item $r(x) \vee g(x)$ 
       \item $r(x) \wedge g(x) \imp \bot$
@@ -451,8 +510,16 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
       \item $\exists x.~\top$
       \item $\exists y.\,s(x,y)$
   \end{enumerate}
-  %\item Proof recovery
-   \end{itemize}
+  \item Solution of puzzle before eliminating 
+  the function:
+    \begin{itemize}
+    \item Note that the substitution principle is valid
+    \item Substitute $(s(x) = y)$ for $s(x,y)$   
+    \item $g(x) \wedge s(x)=y \imp r(y)$ is equivalent to $g(x) \imp r(s(x))$,
+    mutatis mutandis for 3 (and, in general, for any function)
+    \item $\exists y.\,s(x)=y$ easily provable
+    \end{itemize}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -470,41 +537,7 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
 \end{frame}
 
 
-\section{Applications}
 
-\begin{frame}
-\frametitle{Applications}
- \begin{itemize}[<+->]   %  [<+-| alert@+>]
-    \item automated reasoning
-    \item proof assistants    
-    \item model finding
-    \item constructive algebra
- %   \item constraint handling (\alert{maybe CL is application of CHR} :-)
- \end{itemize}
-\end{frame}
-
-\subsection{Automated reasoning}
-
-
-
-\begin{frame}
-\frametitle{Rationale for automated reasoning}
- \begin{itemize}[<+->] %[<+->]   %  [<+-| alert@+>]
-    \item Expressivity of CL is between CNF (clauses) and FOL
-    \item Different balance: expressivity versus efficiency
-    \item Skolemization not necessary
-    \begin{itemize}
-       \item Skolemization makes the Herbrand Universe infinite
-       \item Why skolemize an axiom like $p(x,y)\to\exists z.~p(x,z)$?
-       \item Skolemization changes meaning
-       \item Skolem functions obfuscate symmetries
-       \item \alert{But: skolemized proofs can be exponentially shorter!}
-    \end{itemize}
-       
-   \item MOVE Equality almost vanishes: only needed between variables
-   \item Translation from FOL to CL eliminating functions: CUDEN (Nivelle and Meng, IJCAR 06)
- \end{itemize}
-\end{frame}
 
 \weg{
 \begin{frame}
@@ -664,9 +697,13 @@ Coquand
 
 \end{document}
 
-For each subformula $\psi(\vec{x})$ of
-$\phi$ we introduce two atomic predicates $T(\psi)(\vec{x})$ and
-$F(\psi)(\vec{x})$ with the following coherent axioms
+
+Betal papers
+
+Geometric resolution: A proof procedure based on finite model search
+H Nivelle, J Meng - International Joint Conference on Automated …, 2006 - Springer
+
+
 
 
 
