@@ -177,7 +177,7 @@ University of Bergen
 \end{frame}
 
 
-\begin{frame}
+\begin{frame}\label{proofsearch}
 \frametitle{Example of a derivation in CL}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]   
     \item Let $T$ consists of $p\lor \exists x.~q(x)$ 
@@ -390,10 +390,10 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
 \begin{frame}
 \frametitle{Applications of CL}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
-    \item simpler metatheory: proof theory, completeness, Skolem's Thm
+    \item simpler metatheory: proof theory, completeness, 
+    conservativity of skolemization (elimination of $\exists$)
     \item metamathematics: independence, decision problems
-    \item automated reasoning
-    \item proof assistants    
+    \item automated reasoning, supporting proof assistants    
     \item model finding
     \item constructive algebra
  %   \item constraint handling (\alert{maybe CL is application of CHR} :-)
@@ -411,17 +411,19 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
   \item We focus on AR in (fragments of) FOL
   \item There are dozens of FOL provers
   \item TPTP is a large database of AR problems
-  \item There are a handful of CL provers, they are competitive on
-  CL problems but not on FOL problems:
+  \item There are a handful of CL provers (competitive on
+  CL problems, but not on FOL problems):
   \begin{itemize}[<+->]    
-   \item Geo (Nivelle)
+   \item Geo (Nivelle et al.)
    \item Colog (Fisher)
-   \item Larus ( 
+   \item Argo, Larus (Janicic et al.)
+   \item EYE (De Roo, Semantic Web) 
   \end{itemize}
-  %\item Janicic, Kordic (90s): geometry prover Euclid
+  \item Most CL provers support only 0-ary function symbols
+  \item We describe below how to eliminate function symbols
+    %\item Janicic, Kordic (90s): geometry prover Euclid
     %\item Abdennadher, Sch\"utz (90s): \alert CPUHR (\alert Constraints)
     %\item B, Coquand, Fisher, Nivelle (00s): geometric/coh.\ logic
-    %\item De Roo (00s): Euler (EYE, N3, Semantic Web)
  \end{itemize}
 \end{frame}
 
@@ -434,14 +436,14 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
     \begin{itemize}
        \item Skolemization makes the Herbrand Universe infinite
        \item Why skolemize an axiom like $p(x,y)\to\exists z.~p(x,z)$?
-       \item Skolemization changes meaning
-       \item Skolem functions obfuscate symmetries
+       \item Skolemization changes meaning (problematic for interactive
+       theorem proving, and for obtaining proof objects)
+       \item Skolem functions obfuscate symmetries (cf.\ $\diamond$-property)
        \item \red{But}: skolemized proofs can be exponentially shorter!
     \end{itemize}
-   \item Ground forward reasoning is very simple and intuitive
+   \item Ground forward reasoning is very simple and intuitive,
+   proof objects can easily be obtained
    \item \red{But}: non-ground proofs can be exponentially shorter!   
-   \item MOVE Equality almost vanishes: only needed between variables
-   \item Translation from FOL to CL eliminating functions: CUDEN (Nivelle and Meng, IJCAR 06)
  \end{itemize}
 \end{frame}
 
@@ -464,9 +466,9 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
    \item Example: the term $f(s(x),o)$ leads to a condition
    $s(x,y)\land o(u)\land f(y,u,z)$ after which every occurrence of
    $f(s(x),o)$ is replaced by $z$. Then $\forall\vec{x}.~(C \to D)$ becomes 
-   $\forall x,y,u,z,\vec{x}~(s(x,y)\land o(u)\land f(y,u,z)\land C\to D')$ 
-   where $C',D'$ are the result of the substitution.
-   \item Example: $a=b$ becomes $a(x) \land b(y) \to x=y$   
+   $\forall x,y,u,z,\vec{x}~(s(x,y)\land o(u)\land f(y,u,z)\land C'\to D')$ 
+   where $C',D'$ are the result of the substitution in $C,D$.
+   \item Example: $a=b$ becomes $a(x) \land b(y) \to x=y$
    \item Unicity, e.g., $c(x)\land c(y)\to x=y$, \alert{not} required!
    (since the new conditions only occur in negative positions)
  \end{itemize}
@@ -514,30 +516,16 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
   the function:
     \begin{itemize}
     \item Note that the substitution principle is valid
-    \item Substitute $(s(x) = y)$ for $s(x,y)$   
-    \item $g(x) \wedge s(x)=y \imp r(y)$ is equivalent to $g(x) \imp r(s(x))$,
-    mutatis mutandis for 3 (and, in general, for any function)
-    \item $\exists y.\,s(x)=y$ easily provable
+    \item Substitute $(s(x) = y)$ for $s(x,y)$ in 3,4,6:
+     \begin{itemize}
+     \item Regarding 6, $\exists y.\,s(x)=y$ is trivial   
+     \item Regarding 4, $g(x) \wedge s(x)=y \imp r(y)$ is 
+     equivalent to $g(x) \imp r(s(x))$
+     \item Similarly for 3 (and, in general, for any function)   
+     \end{itemize}
     \end{itemize}
   \end{itemize}
 \end{frame}
-
-\begin{frame}
-\frametitle{Proof procedure, recovery of proof object}
- \begin{itemize}[<+->]
-    \item If necessary, translate FOL $\rightarrow$ CL
-    \item Prove (refute) with prover
-    \item Proofs are valid for all relations %and all $T,F$
-    \item Substitute $s(x,y) := (s(x) = y)$, assume constant $0$
-    \item $\exists y.\,s(x)=y$ and $\exists x.~\top$ easily provable
-    \item $g(x) \wedge s(x)=y \imp r(y)$ is equivalent to $g(x) \imp r(s(x))$
-    \item Similarly for all other axioms
-    \item Proof (refutation) of original formula is obtained
- \end{itemize}
-\end{frame}
-
-
-
 
 \weg{
 \begin{frame}
@@ -556,27 +544,36 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
 }%endweg
 
 \begin{frame}
-\frametitle{Automated reasoning}
+\frametitle{Depth-first proof search in CL}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
-    \item Depth-first search: not complete (but quite good)
-    \item Standard ordering of coherent formulas:
+    \item Recall the search procedure on slide \ref{proofsearch}
+    \item Any open leaf is fine, so we always take the leftmost
+    \item What instance of which $\Gamma$-false axiom to pick?
+    \item NB two trees: derivation tree and the search space
+    organized as a tree
+    \item Depth-first search: pick always the first $\Gamma$-false 
+    axiom from the list, and use the `simplest' (`oldest') instance
+    \item Obviously incomplete, but often OK with
+    favourable ordering of coherent axioms:
     \begin{enumerate}
        \item Facts first, then Horn clauses ($\to$ goal)
-       \item Disjunctive clauses
-       \item Existential clauses
-       \item Disjunctive existential clauses
+       \item Disjunctive clauses (cause branching)
+       \item Existential clauses (cause new variables)
+       \item Disjunctive existential clauses (cause both, the worst)
     \end{enumerate}
-    \item Breadth-first search: complete (but often slow)
-    \item Next slide: queueing depth-first
+    \item Example: $\exists y.\,s(x,y)$ should not be put first!
  \end{itemize}
 \end{frame}
 
 \begin{frame}
-\frametitle{Queueing depth-first}
- \begin{itemize}[<+->]
-    \item Obvious: $\exists y.\,s(x,y)$ harmful for depth-first search
-    \item Without functions, depth-first terminates for forms 1 and 2
-    \item Depth-first search not complete for \alert{one single existential} clause, subtle:
+\frametitle{Breadth-first proof search in CL}
+ \begin{itemize}[<+->]   %  [<+-| alert@+>]
+  \item Recall: $\Gamma$ is the state of the node at hand 
+  \item Breadth-first search: collect all `simplest' instances  
+  of $\Gamma$-false axioms and use them exhaustively
+  \item Breadth-first search: complete but infeasible
+  \item Without functions, depth-first terminates for forms 1 and 2
+  \item Depth-first search not complete for \alert{one single existential} clause, subtle:
 \texttt{  p(a). p(b). q(b) -> goal. p(X),p(Y) -> dom(U),p(U),q(X),r(Y).}
     \item Wanted: fair application of forms 3 and 4 
     \item Queueing depth-first: the (disjunctive) existential clauses
@@ -704,7 +701,19 @@ Geometric resolution: A proof procedure based on finite model search
 H Nivelle, J Meng - International Joint Conference on Automated …, 2006 - Springer
 
 
-
+\begin{frame}
+\frametitle{Proof procedure, recovery of proof object}
+ \begin{itemize}[<+->]
+    \item If necessary, translate FOL $\rightarrow$ CL
+    \item Prove (refute) with prover
+    \item Proofs are valid for all relations %and all $T,F$
+    \item Substitute $s(x,y) := (s(x) = y)$, assume constant $0$
+    \item $\exists y.\,s(x)=y$ and $\exists x.~\top$ easily provable
+    \item $g(x) \wedge s(x)=y \imp r(y)$ is equivalent to $g(x) \imp r(s(x))$
+    \item Similarly for all other axioms
+    \item Proof (refutation) of original formula is obtained
+ \end{itemize}
+\end{frame}
 
 
 
