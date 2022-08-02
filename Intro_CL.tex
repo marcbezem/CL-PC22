@@ -548,6 +548,8 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
   }
 }%endweg
 
+\subsection{Proof search strategies}
+
 \begin{frame}
 \frametitle{Depth-first proof search in CL}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
@@ -561,7 +563,7 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
     \item Obviously incomplete, but often OK with
     favourable ordering of coherent axioms:
     \begin{enumerate}
-       \item Facts first, then Horn clauses ($\to$ goal)
+       \item Facts first, then Horn clauses ($\to$ goal first)
        \item Disjunctive clauses (cause branching)
        \item Existential axioms (cause new variables)
        \item Disjunctive existential axioms (cause both, the worst)
@@ -576,27 +578,38 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
   \item Recall: $\Gamma$ is the state of the leaf node at hand 
   \item Breadth-first search: collect all `simplest' instances  
   of $\Gamma$-false axioms and use them exhaustively
-  \item Breadth-first search: complete but infeasible
-  \item Without functions, depth-first terminates for forms 1 and 2
+  \item Breadth-first search: complete, but often infeasible
+  \item With only constants, depth-first complete for forms 1 and 2
   \item Depth-first search not complete for \red{one single existential} clause, subtle:
 \texttt{  p(a). p(b). q(b) -> goal. p(X),p(Y) -> dom(U),p(U),q(X),r(Y).}
     \item Wanted: fair application of axioms of form 3 and 4 
-    \item Queueing depth-first: the (disjunctive) existential clauses
-          in a cyclic queue $+$ iterative deepening wrt constants. Complete.
+    \item Cycling depth-first: depth-first for forms 1 and 2, plus cycling
+    through the (disjunctive) existential clauses, using instances
+    with the `oldest' constants first. Complete.
  \end{itemize}
 \end{frame}
+
+
 
 \begin{frame}
 \frametitle{Automated reasoning in CL, conclusions}
  \begin{itemize}[<+->]
-   \item Good start: Newman's Lemma (B, Coquand, BEATCS'03)
+   \item Good start: Newman's Lemma (Bezem \& Coquand,'03)
    \item Limited success in CASC: 50\% in FOF (Geo, Nivelle'06)
-   \item Readable proofs can be extracted from search space
+   \item Readable proofs can be extracted from CL proofs
    \item Highlight: Hessenberg's Theorem (B, Hendriks, JAR'08)
-   \item Promising: using CDCL techniques (Nikolic, PhD'13)
-    \item Colog:\\\url{www.csupomona.edu/~jrfisher/colog2012/}
+   \item Promising: using SAT techniques (Janicic et al.)
+   %\item Colog:\\\url{www.csupomona.edu/~jrfisher/colog2012/}
+   \item A case study, if time allows: Newman's Lemma, stating
+   that, for any strongly terminating relation $r(x,y)$, if
+   $r$ is locally confluent, then $r$ is confluent.
+   Informal proof on blackboard, code in \texttt{nl.in}.
+   Many interesting aspects.
  \end{itemize}
 \end{frame}
+
+
+\section{Applications of CL}
 
 \subsection{Proof assistants}
 
@@ -607,7 +620,7 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
     \item CL proofs are readable and easy to convert
     \item Provers outputting proof objects
     \begin{itemize}
-       \item CL.pl (exports proofs to Coq)
+       \item \texttt{cl.pl} (exports proofs to Coq)
        \item \url{coherent} (Isabelle tactic, Berghofer)
        \item ArgoCLP (Coq, Isar, `natural' language)
     \end{itemize}
@@ -622,16 +635,20 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
 \begin{frame}
 \frametitle{Model finding}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
-  %  \item Example: DP not closed under inverse of reflexive
-    %          $r$ \hyperlink{nDPmodel}{\beamergotobutton{Go!}}
-    \item Breadth-first not finite model complete: $\exists y.~s(x,y)$
+    \item Models can be infinite, so restrict to finite models
+    \item Naive approach: try to find a model with 1 element,
+    then with 2 elements, and so on. Quantifiers $\forall,\exists$
+    are written out, and the resulting proposition
+    is in each case given to a SAT-solver
+    \item Many clever tricks can actually make this to work
+    \item CL proof search is not finite model complete: $\exists y.~s(x,y)$
     \item Solution (Nivelle \& Meng, IJCAR'06): try old constants
     before you generate a new one
     \item Complete, but lemma learning \alert{absolutely necessary}!
     \item Success in CASC'07: 81\% in FNT (Geo, Nivelle)\\
              (Paradox, based on Minisat, winner with 85\%)
     \item CL competitive on problems `too big to ground'
-    \item Example: formal verification of a Kripke model for simplicial sets (B \& Coquand, TCS)
+    %\item Example: formal verification of a Kripke model for simplicial sets (B \& Coquand, TCS)
  \end{itemize}
 \end{frame}              
 
