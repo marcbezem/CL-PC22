@@ -1,0 +1,52 @@
+% Everything left of ":" has to do with proof search and construction 
+% Prolog syntax: "," for "and", variables start with upper case
+% My convention: "=>" for implication, implicit quantification
+% exist-example: dom(X) right of => means "there exists X"
+% not used here: dom(X) left of => ensures "range restriction"
+
+name(exist).
+
+:- dynamic r/1.
+
+_ axiom assump    : (true => dom(X),r(X)).
+
+_ axiom goal_r(X) : (r(X) => goal).
+
+/*------------------------output---------------------------------------
+
+(r C0)
+ 
+valid, stack: nil
+ 
+--------------------------exist.prf------------------------------------
+
+lemma(1, [], ap(assump, []): (dom(A), r(A))).
+lemma(2, [ (dom(par(0)), r(par(0)))], 
+             ap(goal_r(par(0)), [r(par(0))]):goal).
+lemma(3, [], ap(ex_elim(1), 2):goal).
+[1, 2, 3]
+
+--------------------------exist.v--------------------------------------
+
+Section ex.
+Local false:=False.
+Local false_ind:=False_ind.
+Variable dom:Set.
+Variable goal:Prop.
+Variable r:dom->Prop.
+Hypothesis assump:(EX A:dom|(r A)).
+Hypothesis goal_r:(A:dom)(r A)->goal.
+Lemma ex1: (EX A:dom|(r A)).
+Proof. Exact assump. Qed.
+Lemma ex2: (C0:dom)(r C0)->goal.
+Proof. Exact [C0:dom][VrC0:(r C0)]((goal_r C0) VrC0). Qed.
+Lemma ex3: goal.
+Proof. Exact ((ex_ind dom [C0:dom](r C0) goal [C0:dom]((ex2 C0)))ex1). Qed.
+Check ex3.
+End ex.
+
+*/
+
+
+
+

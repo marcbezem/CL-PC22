@@ -93,7 +93,7 @@ University of Bergen
     Then use $(\varphi\lor\psi)\to D$ iff $(\varphi\to D)\land(\psi\to D)$,
     and $(\exists y.\varphi)\to D$ iff $\forall y.~(\varphi\to D)$
     \item Notation: we use the format of Lemma 2, 
-    leaving out the universal prefix, and omitting the premiss $C\to{}$ 
+    leaving out the universal prefix, and omitting the premiss `$C\to{}$' 
     if $C\equiv\top$
     \item Discuss: $\exists y.\top$ and $\exists y.\bot$ and
     $\forall y.\top$ and $\forall y.\bot$
@@ -111,7 +111,7 @@ University of Bergen
     \exists z.~\mathit{meet}(x,y,z)$
     \item geometry: $%\forall x,y.~
     p(x)\land p(y) \to \exists z.~\ell(z) \land i(x,z) \land i(y,z)$
-    \item rewriting: $%\forall x,y,z.~
+    \item rewriting, $\diamond$-property: $%\forall x,y,z.~
     r(x,y)\land r(x,z) \to \exists u.~r(y,u)\land r(z,u)$
     \item weak-tc-elim: $%\forall x,y.~
     r^*(x,y)\to (x=y)\lor\exists z.~r(x,z)\land r^*(z,y)$     
@@ -144,6 +144,7 @@ University of Bergen
  \end{itemize}
 \end{frame}
 
+\subsection{Proof theory for CL}
 
 \begin{frame}
 \frametitle{A proof theory for CL}
@@ -247,6 +248,7 @@ University of Bergen
 \end{frame}
 
 \subsection{Translation from FOL to CL}
+
 \begin{frame}
 \frametitle{Translation from FOL to CL}
  \begin{itemize}[<+->]
@@ -325,10 +327,10 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
     	\item $F(p\imp q) \imp (T(p) \wedge F(q))$
     	\item $(T(p) \wedge F(p)) \imp \bot$
     \end{enumerate}
-    \item Proof: use 1,2,3 and split on $F(p\imp q) \vee T(p)$, ...
+    \item Proof: use 1, 2, 3 and split on $F(p\imp q) \vee T(p)$, ...
     \item Details on the blackboard
     \item Proof of $\varphi$: take $T\equiv\lambda\varphi.\,\varphi$,
-     $F\equiv\lambda\varphi.\,\neg\varphi$. Then $1,2,3,4$ are easy
+     $F\equiv\lambda\varphi.\,\neg\varphi$. Then 1,2,3,4 are easy
      (but classical), the CL proof is also a proof 
      in propositional logic, and we finish by RAA
  \end{itemize}
@@ -337,14 +339,14 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
 \begin{frame}
 \frametitle{Example in predicate logic: the Drinker's Paradox}
  \begin{itemize}[<+->] 
-    \item Drinker's Paradox: $\varphi\equiv\exists x.~d(x)\to \forall y.d(y))$
+    \item Drinker's Paradox: $\varphi\equiv\exists x.~(d(x)\to \forall y.d(y))$
     \item To prove: $F(\exists x.~d(x)\to \forall y.d(y))) 
     \vdash^{Coh(\varphi)}_\emptyset\bot$    
     \item Part of $Coh(\varphi)$ that is actually used:
     \begin{enumerate}[<+->]
     	%\item $F(\exists x.~d(x)\to \forall y.d(y)))$
     	\item \red{no} take-off without $\exists x. \top$, 
-    	alternative: prove $F(\varphi)\vdash^{Coh(\varphi)}_\set{\red{c}}\bot$
+    	alternative: prove $F(\varphi)\vdash^{Coh(\varphi)}_{\set{\red{c}}}\bot$
     	\item $\forall\red{x}.~( F(\exists x.~d(x)\to \forall y.d(y))) \imp 
     	F(d(\red{x})\to \forall y.d(y)))$
     	\item $\forall\red{x}.~(F(d(\red{x})\to \forall y.d(y)) \imp 
@@ -385,11 +387,12 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
  \end{itemize}
 \end{frame}
 
-\subsection{Applications of CL}
+\subsection{Evaluation of CL as a fragment of FOL}
 
 \begin{frame}
-\frametitle{Applications of CL}
+\frametitle{Evaluation of CL as a fragment of FOL}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
+    \item constructive, with classical logic a conservative extension
     \item simpler metatheory: proof theory, completeness, 
     conservativity of skolemization (elimination of $\exists$)
     \item metamathematics: independence, decision problems
@@ -409,18 +412,20 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
 \frametitle{Automated reasoning (AR)}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
   \item We focus on AR in (fragments of) FOL
-  \item There are dozens of FOL provers
-  \item TPTP is a large database of AR problems
+  \item There are dozens of FOL provers (Vampire wins CASC)
+  \item TPTP is a large database of AR problems (CNF/FOL/HOL)
+  \item Different branch of AR: model finding (SAT/CNF/FNT) 
   \item There are a handful of CL provers (competitive on
   CL problems, but not on FOL problems):
-  \begin{itemize}[<+->]    
+  \begin{itemize}[<+->]
+   \item SATCHMO+ (Bry et al.)
+   \item Argo, Larus (Janicic et al.)   
    \item Geo (Nivelle et al.)
-   \item Colog (Fisher)
-   \item Argo, Larus (Janicic et al.)
-   \item EYE (De Roo, Semantic Web) 
+   \item Colog (Fisher)   
+   \item EYE (De Roo, semantic web) 
   \end{itemize}
   \item Most CL provers support only 0-ary function symbols
-  \item We describe below how to eliminate function symbols
+  \item We describe later how to eliminate function symbols
     %\item Janicic, Kordic (90s): geometry prover Euclid
     %\item Abdennadher, Sch\"utz (90s): \alert CPUHR (\alert Constraints)
     %\item B, Coquand, Fisher, Nivelle (00s): geometric/coh.\ logic
@@ -455,8 +460,8 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
 \begin{frame}
 \frametitle{Elimination of function symbols}
  \begin{itemize}[<+->]
-  \item Idea: use the graph instead of the function,
-  a new $(n{+}1)$-predicates for an $n$-ary function, for example:
+  \item Idea: use the graph instead of the function, i.e.,
+  new $(n{+}1)$-predicates for $n$-ary functions, for example:
    \begin{itemize}[<+->]
     \item For constants: $c(x)$ (expressing $c=x$), 
      axiom $\exists x.\,c(x)$
@@ -467,7 +472,7 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
    $s(x,y)\land o(u)\land f(y,u,z)$ after which every occurrence of
    $f(s(x),o)$ is replaced by $z$. Then $\forall\vec{x}.~(C \to D)$ becomes 
    $\forall x,y,u,z,\vec{x}~(s(x,y)\land o(u)\land f(y,u,z)\land C'\to D')$ 
-   where $C',D'$ are the result of the substitution in $C,D$.
+   where $C',D'$ are the result of the substitution in $C$ and $D$.
    \item Example: $a=b$ becomes $a(x) \land b(y) \to x=y$
    \item Unicity, e.g., $c(x)\land c(y)\to x=y$, \alert{not} required!
    (since the new conditions only occur in negative positions)
@@ -529,7 +534,7 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
 
 \weg{
 \begin{frame}
-\frametitle{Example: DP closed under reflexive closure}
+\frametitle{Example: Diamond property closed under reflexive closure}
 \small\verbatiminput{dpe.co}
 \end{frame}
 
@@ -558,8 +563,8 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
     \begin{enumerate}
        \item Facts first, then Horn clauses ($\to$ goal)
        \item Disjunctive clauses (cause branching)
-       \item Existential clauses (cause new variables)
-       \item Disjunctive existential clauses (cause both, the worst)
+       \item Existential axioms (cause new variables)
+       \item Disjunctive existential axioms (cause both, the worst)
     \end{enumerate}
     \item Example: $\exists y.\,s(x,y)$ should not be put first!
  \end{itemize}
@@ -568,14 +573,14 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
 \begin{frame}
 \frametitle{Breadth-first proof search in CL}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
-  \item Recall: $\Gamma$ is the state of the node at hand 
+  \item Recall: $\Gamma$ is the state of the leaf node at hand 
   \item Breadth-first search: collect all `simplest' instances  
   of $\Gamma$-false axioms and use them exhaustively
   \item Breadth-first search: complete but infeasible
   \item Without functions, depth-first terminates for forms 1 and 2
-  \item Depth-first search not complete for \alert{one single existential} clause, subtle:
+  \item Depth-first search not complete for \red{one single existential} clause, subtle:
 \texttt{  p(a). p(b). q(b) -> goal. p(X),p(Y) -> dom(U),p(U),q(X),r(Y).}
-    \item Wanted: fair application of forms 3 and 4 
+    \item Wanted: fair application of axioms of form 3 and 4 
     \item Queueing depth-first: the (disjunctive) existential clauses
           in a cyclic queue $+$ iterative deepening wrt constants. Complete.
  \end{itemize}

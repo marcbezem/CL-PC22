@@ -1,0 +1,55 @@
+% or-example:     p ; g is Prolog syntax for p \/ q
+
+:- dynamic p/0,q/0,r/0. name(or).
+
+_ axiom assump  : (true => p ; q).
+
+_ axiom goal_pr : (p,r => goal).
+
+_ axiom goal_q  : (q => goal).
+
+_ axiom r_if_p  : (p => r).
+
+/*--------------------------output-----------------------
+
+stack pushed, stack: p \/ q :: nil
+ 
+stack top tailed: p
+r
+ 
+valid, stack: q :: nil
+ 
+stack popped: q
+ 
+valid, stack: nil
+
+-----------------------------or.v------------------------
+
+Section or.
+Local false:=False.
+Local false_ind:=False_ind.
+Variable dom:Set.
+Variable goal:Prop.
+Variable p:Prop.
+Variable q:Prop.
+Variable r:Prop.
+Hypothesis assump:p \/ q.
+Hypothesis goal_pr:p/\r->goal.
+Hypothesis goal_q:q->goal.
+Hypothesis r_if_p:p->r.
+Lemma L1: p \/ q.
+Proof. Exact assump. Qed.
+Lemma L2: p->r.
+Proof. Exact [Vp:p](r_if_p Vp). Qed.
+Lemma L3: p->goal.
+Proof. Exact [Vp:p](goal_pr (conj ?? Vp (L2 Vp))). Qed.
+Lemma L4: q->goal.
+Proof. Exact [Vq:q](goal_q Vq). Qed.
+Lemma L5: goal.
+Proof. Exact (or_ind ?? goal (L3)(L4)(L1)). Qed.
+Check L5.
+End or. 
+
+*/
+
+

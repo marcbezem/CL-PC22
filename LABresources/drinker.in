@@ -1,0 +1,25 @@
+name(drinker).
+
+:- dynamic d/1,notd/1.
+
+% The Drinker Paradox: in a non-empty group there is somebody such that,
+% if (s)he is drunk then everybody is drunk.
+% Since the Drinker Paradox heavily relies on classical logic it is not 
+% a natural example for GL. However, it is possible.
+% First of all the domain should be non-empty:
+
+dom(a).
+
+% The goal is:
+% there exists x such that d(y) for all y whenever d(x).
+% This is not a geometric formula. The systematic translation
+% based on the tableaux method yields that the Drinker Paradox is
+% a tautology iff the following geometric theory is inconsistent:
+
+_ axiom d_cons(X)   : (d(X),notd(X) => false).
+_ axiom neg_phi(X)  : (dom(X) => d(X),neg_psi).
+_ axiom neg_psi_ax  : (neg_psi => dom(Y),notd(Y)).
+
+% NB inconsistency is proved without a clause for goal!
+
+

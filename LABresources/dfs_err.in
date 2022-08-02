@@ -1,0 +1,13 @@
+% example showing that DFS + state change can give incompleteness
+% even with "offending axiom" last
+
+name(dfserr).
+
+:- dynamic p/1,q/1,r/1.
+
+% domain elements a,b
+dom(a). dom(b).
+
+_ axiom assump     : (true      => p(a),p(b)).
+_ axiom goal_ax    : (q(b)      => goal).
+_ axiom weird(X,Y) : (p(X),p(Y) => dom(U),p(U),q(X),r(Y)).

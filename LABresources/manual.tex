@@ -1,0 +1,159 @@
+\documentclass{article}
+
+\usepackage{a4wide}
+
+\begin{document}
+
+\begin{center}
+\textbf{Manual for use of the CL prover cl.pl in Prolog}
+\end{center}
+
+\paragraph{General instructions}
+
+\begin{enumerate}
+\item Install SWI-Prolog from \texttt{www.swi-prolog.org} or distro.
+Currently version 8.0.3 on Mac OS and 7.3.4 on Linux Mint.
+\item The command \texttt{swipl} launches SWI-Prolog
+enter \texttt{[cl].}after the \texttt{?-} prompt to load the CL prover.
+\item There are basically five commands that you can use after the
+  \texttt{?-} prompt:
+\begin{itemize}
+\item \texttt{test(<file>)} tries to prove the proposition goal from
+  the axioms in \texttt{<file>.in}.
+\item \texttt{out(<file>)} does the same as \texttt{test(<file>)} but
+  writes to \texttt{<file>.out}.
+\item \texttt{prf(<file>)} reconstructs a proof from the log and
+  writes this to \texttt{<file>.prf}.
+\item \texttt{coq(<file>)} generates a Coq script from
+  \texttt{<file>.prf} and writes to \texttt{<file>.v}.
+\item \texttt{run(<file>)} does \texttt{out}, \texttt{prf} and
+  \texttt{coq} with \texttt{<file>} and lists axioms that are not used.
+\end{itemize}
+\item Try \texttt{run(dpe)} to make sure everything is fine.   
+\item If you have Coq \texttt{coq.inria.fr} installed, 
+  you can check the generated proofs by the command \texttt{coqc <file>.v}
+  after the Unix prompt. This creates \texttt{<file>.vo} which could
+  be used in later Coq developments.
+\end{enumerate}
+
+
+\paragraph{Instructions for preparing input files}
+
+The prover always tries to find a proof of \texttt{goal}
+\begin{enumerate}
+\item If you want to prove $p \wedge q$, the first axiom should be:
+\begin{verbatim}
+   _ axiom <name>:(p,q => goal).
+\end{verbatim}
+\item If you want to prove $p \vee q$, the first two axioms should be:
+\begin{verbatim}
+   _ axiom <name1>: (p => goal).
+   _ axiom <name2>: (q => goal).
+\end{verbatim}
+ % Proving that a theory is inconsistent goes by proving goal WITHOUT
+ % axioms as above.
+\item If you want to prove that there exists an $x$ such that $p(x)$,
+  the first axiom should be:
+\begin{verbatim} 
+   _ axiom <name>(X): (p(X) => goal).
+\end{verbatim}
+   Note that in Prolog variables start with an upper case letter.
+
+\item If you want to prove that, e.g., for all $x$ with $p(x)$ there exists
+   a $y$ such that $q(x,y)$ the first three lines should be:
+\begin{verbatim}
+   dom(a). % declaration of a new constant
+   _ axiom <name1>: (true => p(a)).
+   _ axiom <name2>(Y): (q(a,Y) => goal).
+ \end{verbatim}
+ \item For proving an arbitrary coherent formula you must craft some
+   combination of 1-4.
+ \item Recall that the search is depth-first so that a reasonable
+   ordering is: first the Horn clauses, then the disjunctive clauses
+   and finally axioms like seriality.  This will work in many cases.
+\item The general format of an input clause is:
+\begin{verbatim}
+   <control> axiom <name>(<variables>): (<conj. of atoms> => <conclusion>).
+\end{verbatim}
+  The \texttt{<variables>} are the universal variables of the axiom.
+  Use Prolog's disjunction \texttt{;}. Universal variables must occur
+  in the premiss (range restriction), if necessary use the domain
+  predicate \texttt{dom}. For example, reflexivity should NOT be
+\begin{verbatim}
+   _ axiom refl(X): (true => r(X,X)) 
+\end{verbatim}
+but 
+\begin{verbatim}
+   _ axiom refl(X): (dom(X) => r(X,X)). 
+\end{verbatim}
+Right of \texttt{=>} the domain predicate is used to express
+existential quantification.  Thus, e.g., for all $x$ we have $p$ or
+there exists a $y$ such that $q(x,y)$ should be:
+\begin{verbatim}
+   _ axiom <name>(X): (dom(X) => p ; dom(Y),q(X,Y)).
+\end{verbatim}
+\item Predicates you use should be declared with their arity, e.g.,
+\begin{verbatim}
+   :- dynamic p/0,q/2.
+\end{verbatim}
+\end{enumerate}
+
+
+\paragraph{The pragmatics of the CL prover}
+
+\begin{enumerate}
+\item For small problems the following Law of Nature for AR seems to
+  be valid: Either the problem is solved in 100 milliseconds, or it is
+  not solved at all.
+\item Of a complete run, test and coq take each 10\% of the CPU time
+  and prf the rest.
+\item (OPTIONAL) Strategies can be programmed with the binary predicate
+  \texttt{enabled(<control>,<guard>)} and the ternary predicate
+  \texttt{next(<control>,<guard>,<new\_guard>)}. This requires some
+  skill. It may cause false negatives and even runtime errors. False
+  positives have not happened in practice, but could happen in
+  principle, f.e., after \texttt{assert(false)} when the search has
+  started.  False positives NEVER EVER pass the typecheck of Coq. :-)
+ \item Launch \texttt{grep enabled *.in} to see which examples use
+   strategies and how. Never use a strategy when you do not understand
+   why the CL prover doesn't find the proof.
+\item Ignore warnings about redefined static procedures.
+\end{enumerate}
+
+\paragraph{Suggestions for small experiments}
+
+\begin{enumerate}
+\item Run \texttt{or.in}, \texttt{exist.in} and \texttt{drinker.in}
+  and understand the \texttt{.out} files completely.
+
+\item Prove $p$ in the coherent theory $(\exists x\, q(x)) \vee p,\, q(x)
+  \to p$.
+  
+\item Prove that a transitive and symmetric relation $r$ satisfies
+  $r(x,y) \to r(x,x)$.
+  
+\item The file \texttt{dpe.in} expresses that the diamond property is
+  preserved under reflexive closure of the rewrite relation, that is,
+  if $r$ satisfies the axiom $\mathit{dp\_r}$ then $\mathit{re}$
+  defined by $\mathit{e\_in\_re}$, $\mathit{r\_in\_re}$,
+  $\mathit{e\_or\_r}$ also satisfies the diamond property.  Run
+  \texttt{dpe.in} and understand the \texttt{.out} file completely.
+  Explain why the proof is far from optimal and give a better proof by
+  human intelligence.
+  
+\item Prove that a relation $r$ which satisfies the diamond property
+  is serial: $r(x,y) \to (\exists z\, r(y,z))$.
+  
+\item Translate to CL and prove: $(\forall x (\exists y (p(x) \vee q(y))))
+  \to (\exists y (\forall x (p(x) \vee q(y))))$.
+  
+\item Let $\mathit{lt}$ be transitive and strongly serial: 
+$\forall x~\exists y\, lt(x,y))$. Show
+  by translation to CL that $p(x) \leftrightarrow \forall y
+  (\mathit{lt}(x,y) \to \neg p(y))$ leads to a contradiction if the
+  domain is non-empty.
+
+\end{enumerate}   
+
+
+\end{document}
