@@ -1,6 +1,7 @@
 \documentclass{article}
 
 \usepackage{a4wide}
+\newcommand{\weg}[1]{}
 
 \begin{document}
 
@@ -13,8 +14,9 @@
 \begin{enumerate}
 \item Install SWI-Prolog from \texttt{www.swi-prolog.org} or distro.
 Currently version 8.0.3 on Mac OS and 7.3.4 on Linux Mint.
-\item The command \texttt{swipl} launches SWI-Prolog
-enter \texttt{[cl].}after the \texttt{?-} prompt to load the CL prover.
+\item The command \texttt{swipl} launches SWI-Prolog,
+enter \texttt{[cl]}. after the \texttt{?-} prompt to load the CL prover.
+(Prolog input ends with a full stop.)
 \item There are basically five commands that you can use after the
   \texttt{?-} prompt:
 \begin{itemize}
@@ -75,6 +77,8 @@ The prover always tries to find a proof of \texttt{goal}
 \begin{verbatim}
    <control> axiom <name>(<variables>): (<conj. of atoms> => <conclusion>).
 \end{verbatim}
+  In this course we take \texttt{<control> = \_ }, since we are not
+  programming search strategies.
   The \texttt{<variables>} are the universal variables of the axiom.
   Use Prolog's disjunction \texttt{;}. Universal variables must occur
   in the premiss (range restriction), if necessary use the domain
@@ -105,9 +109,10 @@ there exists a $y$ such that $q(x,y)$ should be:
 \item For small problems the following Law of Nature for AR seems to
   be valid: Either the problem is solved in 100 milliseconds, or it is
   not solved at all.
-\item Of a complete run, test and coq take each 10\% of the CPU time
-  and prf the rest.
-\item (OPTIONAL) Strategies can be programmed with the binary predicate
+\item Of a complete run, often \texttt{test} and \texttt{coq} take 
+each 10\% of the CPU time, and \texttt{prf} the rest.
+\weg{
+\item Strategies can be programmed with the binary predicate
   \texttt{enabled(<control>,<guard>)} and the ternary predicate
   \texttt{next(<control>,<guard>,<new\_guard>)}. This requires some
   skill. It may cause false negatives and even runtime errors. False
@@ -117,6 +122,7 @@ there exists a $y$ such that $q(x,y)$ should be:
  \item Launch \texttt{grep enabled *.in} to see which examples use
    strategies and how. Never use a strategy when you do not understand
    why the CL prover doesn't find the proof.
+} % end weg
 \item Ignore warnings about redefined static procedures.
 \end{enumerate}
 
@@ -147,11 +153,12 @@ there exists a $y$ such that $q(x,y)$ should be:
 \item Translate to CL and prove: $(\forall x (\exists y (p(x) \vee q(y))))
   \to (\exists y (\forall x (p(x) \vee q(y))))$.
   
-\item Let $\mathit{lt}$ be transitive and strongly serial: 
-$\forall x~\exists y\, lt(x,y))$. Show
-  by translation to CL that $p(x) \leftrightarrow \forall y
-  (\mathit{lt}(x,y) \to \neg p(y))$ leads to a contradiction if the
-  domain is non-empty.
+\item Let $\mathit{lt}$ be transitive and satisfy
+   $\forall x~\exists y\, lt(x,y))$. 
+  Show by translation to CL that $p(x) \leftrightarrow \forall y
+  (\mathit{lt}(x,y) \to \neg p(y))$ implies that the domain is empty.
+  
+\item Translate to CL and prove your favourite FOL tautology automatically!
 
 \end{enumerate}   
 
