@@ -535,7 +535,7 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
 \weg{
 \begin{frame}
 \frametitle{Example: Diamond property closed under reflexive closure}
-\small\verbatiminput{dpe.co}
+\small\verbatiminput{dpe.in}
 \end{frame}
 
 \frame
@@ -616,17 +616,19 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
 \begin{frame}
 \frametitle{Proof assistants}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
-    \item Proof objects \alert{required}
-    \item CL proofs are readable and easy to convert
-    \item Provers outputting proof objects
+    \item In proof assistants, proof objects are required
+    \item CL proofs are readable and easily convertable
+    \item Provers outputting proof objects:
     \begin{itemize}
-       \item \texttt{cl.pl} (exports proofs to Coq)
+       \item \texttt{cl.pl} (B, exports proofs to Coq, also used
+       to verify them)
        \item \url{coherent} (Isabelle tactic, Berghofer)
-       \item ArgoCLP (Coq, Isar, `natural' language)
+       \item ArgoCLP (Coq, Isar, natural language)
     \end{itemize}
-    \item %\href{file://testscript.html}{\beamergotobutton{Excerpt}} 
-                Excerpt: Stojanovic et al., CICM'14
-                \href{run:/usr/bin/evince}{\beamergotobutton{evince}}
+    \item Modern automated support of proof assistants centers
+    around specialized tools for decidable fragments of FOL,
+    using SAT Modulo Theories-techniques. Very useful is, e.g.,
+    the tactic \texttt{lia} (linear arithmetic) in Coq.   
  \end{itemize}
 \end{frame}
 
@@ -635,39 +637,22 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
 \begin{frame}
 \frametitle{Model finding}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
-    \item Models can be infinite, so restrict to finite models
+    \item Satisfiability in FOL is co-RE, so restrict to finite models
     \item Naive approach: try to find a model with 1 element,
     then with 2 elements, and so on. Quantifiers $\forall,\exists$
-    are written out, and the resulting proposition
-    is in each case given to a SAT-solver
+    are written out (`grounding'), and the resulting (rapidly growing)
+    propositions are fed to a SAT-solver
     \item Many clever tricks can actually make this to work
     \item CL proof search is not finite model complete: $\exists y.~s(x,y)$
-    \item Solution (Nivelle \& Meng, IJCAR'06): try old constants
-    before you generate a new one
-    \item Complete, but lemma learning \alert{absolutely necessary}!
+    \item Solution (Nivelle): use (exhaustively) old constants 
+    before you generate a new one + use lemma learning
+    %\item Complete, but lemma learning \red{absolutely necessary}!
     \item Success in CASC'07: 81\% in FNT (Geo, Nivelle)\\
              (Paradox, based on Minisat, winner with 85\%)
     \item CL competitive on problems `too big to ground'
     %\item Example: formal verification of a Kripke model for simplicial sets (B \& Coquand, TCS)
  \end{itemize}
 \end{frame}              
-
-
-\weg{
-\begin{frame}[label=nDPmodel]
-%\frametitle{Example: DP closed under reflexive closure}
-\small\verbatiminput{ndp.co}
-\end{frame}
-
-\frame
-  {    
-    \frametitle{Model} \vspace*{-.95in}
-    \scalebox{0.40}
-      {
-    \includegraphics{tree_dpe}
-      }
-  }
-}%endweg
 
 \subsection{Constructive algebra}
 
@@ -686,14 +671,16 @@ Coquand
 \begin{frame}
 \frametitle{Algebraic theories in CL/GL}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
-    \item Ring (commutative with unit): equational
+    \item Ring (commutative with $1\neq0$): equational axioms
     \item Local ring: $%\forall x.~
-    \exists y.~(x\cdot y=1) \lor \exists z.~((1-x)\cdot z = 1)$
+    \exists y.~(x\cdot y=1) \lor \exists y.~((1-x)\cdot y = 1)$
     \item Field: $%\forall x.~
     (x=0) \lor \exists y.~(x\cdot y=1)$ (makes $=$ decidable!)
     \item Alg.\ closed: $%\forall x.~
-    \exists x.~x^{n+1}=a_0 + a_1 x + \cdots + a_n x^n $ ($n\in\nat$)
-    \item Nilpotent $x$: $\bigvee_{n\in\nat}\, 0= x^{n+1}$
+    \exists x.~x^{n+1}=a_0 + a_1 x + \cdots + a_n x^n $ (all $n\in\nat$),
+    so infinitely many coherent axioms
+    \item Positive formula using an infinite disjunction:
+    $\bigvee_{n\in\nat}\, 0= x^{n+1}$, expressing that $x$ is nilpotent
 
  \end{itemize}
 \end{frame}
@@ -705,11 +692,13 @@ Coquand
     Let $I$ be an ideal of $k[\vec x]$, and $V(I)$ the set of common zeros (Nullstellen)
     in $K$ of the polynomials in $I$. Then: for any $p\in k[\vec x]$ such that
     $p$ is zero on $V(I)$ there exists an $n$ such that $p^n \in I$.
-    \item Hilbert's Nullstellensatz in its full generality is a strong classical theorem,
-    with lots of special cases and variations
+    \item Hilbert's Nullstellensatz in its full generality is a 
+    strong classical theorem, with lots of special cases and variations
     \item Effective Nullstellensatz: \alert{compute} the $n$ such that $p^n \in I$
     \item Example: 
-  $\mathbb{Q} \subset \mathbb{C}$, $I=(1+2x^2+x^4)$, $p= x-x^5$, $p^n \in I$~?
+  $\mathbb{Q} \subset \mathbb{C}$, $I=(x^4+2x^2+1)$, $p= x^5-x$, $p^2 \in I$
+    \item Dynamical method in algebra: Effective Nullstellensätze,
+    Coste, Lombardi, Roy, 2001 (Dynamic method = CL proof)
 
  \end{itemize}
 \end{frame}
