@@ -392,14 +392,16 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
 \begin{frame}
 \frametitle{Evaluation of CL as a fragment of FOL}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
-    \item constructive, with classical logic a conservative extension
-    \item simpler metatheory: proof theory, completeness, 
+  \item Constructive, with classical logic a conservative extension
+  \item Simpler metatheory: proof theory, completeness, 
     conservativity of skolemization (elimination of $\exists$)
-    \item metamathematics: independence, decision problems
-    \item automated reasoning, supporting proof assistants    
+  \item Metamathematics: independence, decision problems
+  \item Other applications:
+   \begin{itemize}[<+->]   %  [<+-| alert@+>]
+    \item automated reasoning, supporting proof assistants 
     \item model finding
     \item constructive algebra
- %   \item constraint handling (\alert{maybe CL is application of CHR} :-)
+   \end{itemize}
  \end{itemize}
 \end{frame}
 
@@ -532,22 +534,6 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
   \end{itemize}
 \end{frame}
 
-\weg{
-\begin{frame}
-\frametitle{Example: Diamond property closed under reflexive closure}
-\small\verbatiminput{dpe.in}
-\end{frame}
-
-\frame
-  {    
-    \frametitle{Search space} \vspace*{-.95in}
-    \scalebox{0.40}
-      {
-    \includegraphics{tree_dpe}
-      }
-  }
-}%endweg
-
 \subsection{Proof search strategies}
 
 \begin{frame}
@@ -572,10 +558,20 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
  \end{itemize}
 \end{frame}
 
+
+\begin{frame}
+%\frametitle{Example: Diamond property closed under reflexive closure}
+  \begin{columns}
+    \column{\dimexpr\paperwidth-10pt}
+    \small\verbatiminput{LABresources/dpe.in}
+  \end{columns}
+\end{frame}
+
+
 \begin{frame}
 \frametitle{Breadth-first proof search in CL}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
-  \item Recall: $\Gamma$ is the state of the leaf node at hand 
+  \item Recall: $\Gamma$ is the condition of the leaf node at hand 
   \item Breadth-first search: collect all `simplest' instances  
   of $\Gamma$-false axioms and use them exhaustively
   \item Breadth-first search: complete, but often infeasible
@@ -711,21 +707,16 @@ Betal papers
 Geometric resolution: A proof procedure based on finite model search
 H Nivelle, J Meng - International Joint Conference on Automated …, 2006 - Springer
 
+Th{\'e}ories coh{\'e}rentes et topos coh{\'e}rents,
+    M.-F.~Coste and M.~Coste, 1975.
+
 
 \begin{frame}
-\frametitle{Proof procedure, recovery of proof object}
+\frametitle{Title}
  \begin{itemize}[<+->]
-    \item If necessary, translate FOL $\rightarrow$ CL
-    \item Prove (refute) with prover
-    \item Proofs are valid for all relations %and all $T,F$
-    \item Substitute $s(x,y) := (s(x) = y)$, assume constant $0$
-    \item $\exists y.\,s(x)=y$ and $\exists x.~\top$ easily provable
-    \item $g(x) \wedge s(x)=y \imp r(y)$ is equivalent to $g(x) \imp r(s(x))$
-    \item Similarly for all other axioms
-    \item Proof (refutation) of original formula is obtained
+    \item 
  \end{itemize}
 \end{frame}
-
 
 
 
