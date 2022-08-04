@@ -92,8 +92,8 @@
 \author{Marc Bezem\\
 Department of Informatics\\
 University of Bergen\\
-jww\\
-U. Buchholtz and T. Coquand, 2018
+\mbox{ }\\
+(based on jww U. Buchholtz and T. Coquand, 2018)
 }
 \date{September 2022}
 
@@ -107,18 +107,11 @@ U. Buchholtz and T. Coquand, 2018
 
 \section{A category of forcing conditions}
 
-\subsection{States as a category}
+\subsection{Conditions as a category}
 
 \begin{frame}
-\frametitle{Coherent logic preliminaries}
+\frametitle{Categories of forcing conditions}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
-  \item Sources: 
-   \begin{itemize}[<+->]   %  [<+-| alert@+>]
-    \item Th{\'e}ories coh{\'e}rentes et topos coh{\'e}rents,
-    M.-F.~Coste and M.~Coste, 1975.
-    \item Syntactic Forcing Models for Coherent Logic, 
-    B. and U. Buchholtz and T. Coquand, 2018
-    \end{itemize}
    \item Fix a finite first-order signature $\Sigma$
    \item Fix a countably infinite set of variables $\XX=\set{x_0,x_1,\ldots}$
    \item Let $\Tm(X)$ be the set of $\Sigma$-terms over $X \subseteq \XX$    
@@ -129,83 +122,91 @@ U. Buchholtz and T. Coquand, 2018
     of atoms in the language defined by $\Sigma$ and $X$.
     (This means that only variables from $X$ may occur in $A$.)
     Such pairs $(X;A)$ are called \emph{conditions}.
-    \item Morphisms denoted as $f : (Y;B) \to (X;A)$,
-where $f$ is a \emph{term substitution} $X \to \Tm(Y)$ such that $Af \subseteq B$
+    \item Morphisms denoted as $f : (Y;B) \to (X;A)$, where $f$ is a 
+    \emph{term substitution} $X \to \Tm(Y)$ such that $Af \subseteq B$
+    \item Composition $f\circ g$ of $g : (Z;C) \to (Y;B)$ with $f$ above is
+    the substitution $X \to \Tm(Y)$ that is the composition $fg$
+    (in diagram order!) of the respective substitutions
+    \item Indentity morphisms $(X;A)\to(X;A)$ are identity 
+    substitutions $X\to X$
     \end{itemize}
+    \item Similarly to $\Cts$, define $\Cvs~(\Crn)$ when 
+    in addition $f(X)\subseteq Y$ (and also $f$ injective)
  \end{itemize}
 \end{frame}
 
 
 \begin{frame}
-\frametitle{CL as fragment of FOL}
+\frametitle{Categories of forcing conditions (ctnd)}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
-    \item Closed formulas of the form $\alert{\forall\vec{x}.}~C \to D$ \alert{(scope!)}, where ...
-    \item $C$ a conjunction of atoms $A_1 \land \cdots \land A_n~(n\geq 0)$
-    \item $D$ a disjunction $E_1 \lor \cdots \lor E_m~(m\geq 0)$, where ...
-    \item each $E_i$ is a formula of the form $\exists \vec{y}.~B_1 \land \cdots \land B_k~(k\geq 0)$
-              where each $B_j$ is an atom ($\vec{y}, B_j, k$ may depend on $i$)
-    \item Short forms, implicitly universally closed: 
-    \begin{itemize}
-       \item $\top$ for empty conjunction, $\bot$ for empty disjunction         
-       \item $E$ (as above) for $\forall \vec x.~\top\to E$
-       \item $(A_1 \land \cdots \land A_n)\to(B_1 \lor \cdots \lor B_m)$, resolution clauses
-       \item $(A_1 \land \cdots \land A_n)\to \exists y.~B$, one existential quantifier
-    \end{itemize}
+    \item $\Cts,\Cvs,\Crn$ are indeed categories with terminal object $(;)$
+    \item Conditions will be denoted as, e.g., $(x,y,z;p(z),q(f(x),z,z))$
+    \item Substitutions will be denoted as, e.g., $[y:=x,z:=g(x)]$
+    \item Post-fixing substitutions in diagram order: $(Af)g = A(fg)$
+    \item Depending on $\Sigma$, categories
+    $\Cts,\Cvs,\Crn$ are rather different:
+     \begin{itemize}
+      \item $[x:=0],[x:=1]:(;)\rightrightarrows(x;)$ cannot be equalized    
+      \item $[y:=w,z:=w]:(w;)\to(y,z;)$ can only be equalized non-injectively
+     \end{itemize}
+    \item Actually, $\Cts~(\Cvs)$ has all finite products (limits) 
+    \item Depending on $\Sigma$, categories $\Cts,\Cvs,\Crn$ will 
+    lead to different forcing semantics 
+    (opportunities for independence proofs!)
+    \item What does a condition mean? A finite, partial description
+    of potential models. Time to consider a coherent theory $T$ ...       
  \end{itemize}
 \end{frame}
 
 \begin{frame}
-\frametitle{History of CL}
+\frametitle{Coverage}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
-    \item Skolem (20s):  lattice theory and projective geometry
-    \item Grothendieck (70s): geometric morphisms preserve geometric
-              logic (= coherent logic + infinitary disjunction)
-    %\item Janicic, Kordic (90s): geometry prover Euclid
-    %\item Abdennadher, Sch\"utz (90s): \alert CPUHR (\alert Constraints)
-    %\item B, Coquand, Fisher, Nivelle (00s): geometric/coh.\ logic
-    %\item De Roo (00s): Euler (EYE, N3, Semantic Web)
- \end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Examples}
- \begin{itemize}[<+->]   %  [<+-| alert@+>]
-    \item lattice theory: $%\forall x,y.~
-    \exists z.~\mathit{meet}(x,y,z)$
-    \item geometry: $%\forall x,y.~
-    p(x)\land p(y) \to \exists z.~\ell(z) \land i(x,z) \land i(y,z)$
-    \item rewriting: $%\forall x,y,z.~
-    r(x,y)\land r(x,z) \to \exists u.~r(y,u)\land r(z,u)$
-    \item fol-tc: $%\forall x,y.~
-    r^*(x,y)\to (x=y)\lor\exists z.~r(x,z)\land r^*(z,y)$     
-    \item seriality: $%\forall x.~
-    \exists y.~s(x,y)$ (who needs a function?)
-    \item field theory: $%\forall x.~
-    (x=0) \lor \exists y.~(x\cdot y=1)$
-    \item non-empty domain: $\exists x.~\top$
-%    \item non-empty domain: $\exists x.~\top$
- \end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{A proof theory for CL}
- \begin{itemize}[<+->]   %  [<+-| alert@+>]
-    \item Ground forward chaining with case distinction and introduction of witnesses
-(ground tableau reasoning)
-    \item Inductive definition of $\set{F_0,\ldots,F_{n-1}}\vdash_\Gamma F$ possible %(see papers)
-    \item Example: infer $r$ from $p\lor \exists x.~q(x),~p\to\bot,~q(y)\to r$
-    \[
-\infer[p\vee \exists x.~q(x)]{\emptyset}
-{
-\infer[p\to\bot]{\set{p}}{(\bot)} & \infer[q(y)\to r]{\set{q(c)}}{\set{q(c),r}}
-}
+  \item Fix a coherent theory $T$
+  \item Define inductively a relation $\covT$ between
+  conditions and finite sets of conditions (denoted by $U,V,...$):    
+   \begin{enumerate}
+    \item[(base)] $C\covT\set{C}$ for all conditions $C$
+    \item[(step)] If $T$ has an axiom $\forall\vec{x}.~
+    (C \to (\exists\vec{y}_1.B_1) \lor \cdots \lor (\exists\vec{y}_n.B_n))$
+    such that for some sequence of terms $\vec{t}$ with variables in $X$
+    we have $C[\vec{t}/\vec{x}] \subseteq A$, then the following rule applies:   
+\[
+\frac{(X,\vec y_1; A,B_i[\vec{t}/\vec{x}]) \covT U_1 \quad \ldots
+\quad (X,\vec y_n; A,B_i[\vec{t}/\vec{x}]) \covT U_n}
+{(X;A) \covT \bigcup_{1\leq i\leq n} U_i}
 \]
-    \item Close branch if conclusion has been inferred,
-    or $\bot$ (zero cases); stop if no new info can be inferred (model found!) 
-    \item Proof steps are simple and intuitive (but can be many)
-    \item Easy conversion of tableau to natural deduction, lambda term, or stylized natural language
+   \end{enumerate}
+  \item Looks familiar? Let's take the semantic point of view.
+  \item Example: if $T=\set{p\to(q\lor r)}$, 
+  then $(;p)\covT\set{(;p,q),(;p,r)}$. The models of $T$ extending $(;p)$ are
+  models extending $(;p,q)$ or models extending $(;p,r)$
+  \item When $C \covd U$ (also: $U \covs C$) we say that $U$ covers $C$  
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Important properties of the coverage}
+ \begin{itemize}[<+->]   %  [<+-| alert@+>]
+    \item The properties of $\covd$ involve any of $\Cts,\Cvs,\Crn$
+    \item We drop $T$ from the notation $\covT$
+    \item Lemma $\covd1$. If $(X;A) \covd U$ and $(Y;B)\in U$,
+    then $X\subseteq Y$ and $A\subseteq B$ and $i_{X,Y} : (Y;B)\to(X;A)$ 
+   
+    \item Lemma $\covd2$.
+    \item Lemma $\covd3$.
  \end{itemize}
 \end{frame}
 
 
 \end{document}
+
+\begin{frame}
+\frametitle{Title}
+ \begin{itemize}[<+->]
+    \item 
+ \end{itemize}
+\end{frame}
+
+
+Th{\'e}ories coh{\'e}rentes et topos coh{\'e}rents,
+    M.-F.~Coste and M.~Coste, 1975.
