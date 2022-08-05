@@ -180,23 +180,68 @@ University of Bergen\\
   \item Example: if $T=\set{p\to(q\lor r)}$, 
   then $(;p)\covT\set{(;p,q),(;p,r)}$. The models of $T$ extending $(;p)$ are
   models extending $(;p,q)$ or models extending $(;p,r)$
-  \item When $C \covd U$ (also: $U \covs C$) we say that $U$ covers $C$  
+  \item When $C \covd U$ (drop ${}_T$, also: $U \covs C$) 
+  we say that $U$ covers $C$ 
  \end{itemize}
 \end{frame}
 
 \begin{frame}
-\frametitle{Important properties of the coverage}
+\frametitle{Structural properties of the coverage}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
-    \item The properties of $\covd$ involve any of $\Cts,\Cvs,\Crn$
-    \item We drop $T$ from the notation $\covT$
-    \item Lemma $\covd1$. If $(X;A) \covd U$ and $(Y;B)\in U$,
-    then $X\subseteq Y$ and $A\subseteq B$ and $i_{X,Y} : (Y;B)\to(X;A)$ 
-   
-    \item Lemma $\covd2$.
-    \item Lemma $\covd3$.
+    \item The properties of $\covd$ use (any one of) $\Cts,\Cvs,\Crn$
+    %\item We drop $T$ from the notation $\covT$
+    \item Lemma ${\covd}1$. If $(X;A) \covd U$ and $(Y;B)\in U$,
+    then $X\subseteq Y$ and $A\subseteq B$ and $i_{X,Y} : (Y;B)\to(X;A)$.
+    Prf: easy induction on $\covd$.
+    \item Lemma ${\covd}2$. If $f:D\to C$ and $C\covd U$, then there is
+    $V\covs D$ such that, for any $E\in V$ there is an $F\in U$ such 
+    that $g:E\to F$ with $g$ an extension of $f$.
+    Proof: induction on $\covd$. Intuition: view $D$ as an (extension of) the
+    $f$-instance of $C$. \red{NB $\Crn$ OK!}
+    \item Lemma ${\covd}3$. If $C \covd U$ and for every $D\in U$
+    we have a $V_D \covs D$, then $C\covd\bigcup_{D\in U} V_D$.
+    Proof: induction on $\covd$. Intuition: transitivity.
+    \item Together with ${\covd}0:~C \covd\set{C}$, ${\covd}$0--3
+    provide what is needed for the coming definition of forcing to
+    give a sound and complete semantics.
+    \item Further abstraction $\rightsquigarrow$ Grothendieck topology and site
+    
  \end{itemize}
 \end{frame}
 
+\begin{frame}
+\frametitle{Forcing}
+
+Let ${\covd}$ be a covering. % as in Definition~\ref{def:covering}.
+For any condition $X=(n;N)$ and any $n$-closed first-order formula
+$\phi$ we define the forcing relation
+$X\Vdash\phi$ by induction on $\phi$ as follows:
+\begin{enumerate}
+\item $X\Vdash\top$;
+
+\item $X\Vdash\bot$ if $X\covd\es$;
+%(alternatively one can say that there is a dynamic proof of $\bot$ from $X$);
+
+\item $X\Vdash\phi$ if $\phi$ is a fact and there is $U \covs X$ such that
+$\phi\in Y$ for all $Y\in U$;
+%(alternatively one can say that there is a dynamic proof of $\phi$ from $X$);
+
+\item $X\Vdash\phi_1 \land \phi_2$ if $X\Vdash\phi_1$ and $X\Vdash\phi_2$;
+
+\item $X\Vdash\phi_1 \lor \phi_2$ if for some $U$ we have
+$X\covd U$ and  $Y\Vdash\phi_1$ or $Y\Vdash\phi_2$ for all $Y\in U$;
+
+\item $X\Vdash\phi_1 \to \phi_2$ if for all maps $f:X\to Y$
+we have $Y\Vdash\phi_2f$ whenever $Y\Vdash\phi_1f$;
+
+\item $X\Vdash\forall x.\phi$ if for all maps $f:X\to Y$ we have 
+ $Y\Vdash\phi f[x=t]$ for all $t\in Y$;
+ 
+\item $X\Vdash\exists x.\phi$ if there is $U\covs X$ such that,
+for all $Y\in U$, $Y\Vdash\phi[x=t]$ for some $t\in Ter(Y)$.
+
+\end{enumerate}
+\end{frame}
 
 \end{document}
 
