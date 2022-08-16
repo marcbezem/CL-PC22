@@ -146,20 +146,21 @@ University of Bergen\\
     \item Depending on $\Sigma$, categories
     $\Cts,\Cvs,\Crn$ are rather different:
      \begin{itemize}
-      \item $[x:=0],[x:=1]:(;)\rightrightarrows(x;)$ cannot be equalized    
-      \item $[y:=w,z:=w]:(w;)\to(y,z;)$ can only be equalized non-injectively
+      \item $[x:=0],[x:=1]:(;)\rightrightarrows(x;)$ cannot be equalized
+      \item $[x:=y],[x:=z]:(y,z;)\rightrightarrows(x;)$ can be equalized    
+      by $[y:=w,z:=w]:(w;)\to(y,z;)$ in $\Cvs$, but not in $\Crn$
      \end{itemize}
     \item Actually, $\Cts~(\Cvs)$ has all finite products (limits) 
     \item Depending on $\Sigma$, categories $\Cts,\Cvs,\Crn$ will 
     lead to different forcing semantics 
-    (opportunities for independence proofs!)
+    (good for independence proofs!)
     \item What does a condition mean? A finite, partial description
     of potential models. Time to consider a coherent theory $T$ ...       
  \end{itemize}
 \end{frame}
 
 \begin{frame}
-\frametitle{Coverage}
+\frametitle{Coverages depending on coherent theories}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
   \item Fix a coherent theory $T$
   \item Define inductively a relation $\covT$ between
@@ -180,6 +181,7 @@ University of Bergen\\
   \item Example: if $T=\set{p\to(q\lor r)}$, 
   then $(;p)\covT\set{(;p,q),(;p,r)}$. The models of $T$ extending $(;p)$ are
   models extending $(;p,q)$ or models extending $(;p,r)$
+  \item Borderline case: if $T=\set{p\to \bot}$, then $(;p)\covT\es$
   \item When $C \covd U$ (drop ${}_T$, also: $U \covs C$) 
   we say that $U$ covers $C$ 
  \end{itemize}
@@ -210,37 +212,81 @@ University of Bergen\\
 \end{frame}
 
 \begin{frame}
-\frametitle{Forcing}
+\frametitle{Forcing relation based on coverage}
 
-Let ${\covd}$ be a covering. % as in Definition~\ref{def:covering}.
-For any condition $X=(n;N)$ and any $n$-closed first-order formula
-$\phi$ we define the forcing relation
-$X\Vdash\phi$ by induction on $\phi$ as follows:
+Let ${\covd}$ be a coverage. % as in Definition~\ref{def:covering}.
+For any condition $C=(X;A)$ and any first-order formula
+$\phi$ with free variables in $X$, we define the forcing relation
+$C\Vdash\phi$ by induction on $\phi$ as follows:
 \begin{enumerate}
-\item $X\Vdash\top$;
+\item $C\Vdash\top$
 
-\item $X\Vdash\bot$ if $X\covd\es$;
-%(alternatively one can say that there is a dynamic proof of $\bot$ from $X$);
+\item $C\Vdash\bot$ if $C\covd\es$ (i.e., $A\vdash_X \bot$, explain)
 
-\item $X\Vdash\phi$ if $\phi$ is a fact and there is $U \covs X$ such that
-$\phi\in Y$ for all $Y\in U$;
-%(alternatively one can say that there is a dynamic proof of $\phi$ from $X$);
+\item $C\Vdash\phi$ if $\phi$ is a fact and there is $U \covs C$ such that
+$\phi\in B$ for all $(Y;B)\in U$ (i.e., $A\vdash_X \phi$)
 
-\item $X\Vdash\phi_1 \land \phi_2$ if $X\Vdash\phi_1$ and $X\Vdash\phi_2$;
+\item $C\Vdash\phi_1 \land \phi_2$ if $C\Vdash\phi_1$ and $C\Vdash\phi_2$
 
-\item $X\Vdash\phi_1 \lor \phi_2$ if for some $U$ we have
-$X\covd U$ and  $Y\Vdash\phi_1$ or $Y\Vdash\phi_2$ for all $Y\in U$;
+\item $C\Vdash\phi_1 \lor \phi_2$ if for some $U$ we have
+$C\covd U$ and $D\Vdash\phi_1$ or $D\Vdash\phi_2$ for all $D\in U$
 
-\item $X\Vdash\phi_1 \to \phi_2$ if for all maps $f:X\to Y$
-we have $Y\Vdash\phi_2f$ whenever $Y\Vdash\phi_1f$;
+\item $C\Vdash\phi_1 \to \phi_2$ if for all $D$ and morphisms $f:D\to C$
+we have $D\Vdash\phi_2f$ whenever $D\Vdash\phi_1f$
 
-\item $X\Vdash\forall x.\phi$ if for all maps $f:X\to Y$ we have 
- $Y\Vdash\phi f[x=t]$ for all $t\in Y$;
+\item $C\Vdash\forall x.\phi$ if for all $D=(Y;B)$ and 
+morphisms $f:D\to C$ we have 
+ $D\Vdash\phi [f,x=t]$ for all $t\in\Tm(Y)$
  
-\item $X\Vdash\exists x.\phi$ if there is $U\covs X$ such that,
-for all $Y\in U$, $Y\Vdash\phi[x=t]$ for some $t\in Ter(Y)$.
+\item $C\Vdash\exists x.\phi$ if there is $U\covs C$ such that,
+for all $D\in U$, $D=(Y;B)$, $D\Vdash\phi[x=t]$ for some $t\in\Tm(Y)$
 
 \end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Soundness for all formulas}
+\begin{itemize}[<+->]
+ \item Fix a coherent theory $T$ with its $\covd$ and $\Vdash$    
+ \item For all $\phi\in T$ we have $(;)\Vdash\phi$
+ \item Proof by example: take
+ $\phi\equiv\forall x.~(P(x)\to (p\lor \exists y. Q(x,y)))$.
+ (TL;DR) Note that $(;)$ is final, so we have to show that 
+ $C\Vdash P(t)\to p\lor \exists y. Q(t,y)$ for all
+ conditions $C=(X;A)$ and $t\in\Tm(X)$. So, we have to show
+ that $D\Vdash (p\lor \exists y. Q(tf,y))$ for all $D=(Y;B)$
+ and $f:D\to C$ with $D\Vdash P(tf)$. Now, if $U\covs D$ such 
+ that every $E\in U$ contains $P(tf)$, then we can use
+ the instance of $\phi$ with $tf$ to cover $E$
+ such that $E\Vdash p\lor \exists y. Q(tf,y)$,
+ and use ${\covd}3$ to get $D\Vdash p\lor \exists y. Q(tf,y)$.
+ \item By the general soundness result (next slide),
+ not only $T$ is forced, but also all its intuitionistic,
+ possibly non-coherent consequences.
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Soundness of the forcing semantics for all formulas}
+\begin{itemize}[<+->]
+ \item Fix a signature $\Sigma$, one of the categories $\Cts,\Cvs,\Crn$, 
+ a coverage $\covd$ with its forcing relation by $\Vdash$
+ \item No coherent theory $T$ is assumed here
+ \item Let $\Gamma\vdash_X^i \phi$ denote intuitionistic 
+ provability (explain $X$) 
+ \item Soundness: for \red{all} formulas $\Gamma,\phi$ 
+ with free variables in $X$, if $\Gamma\vdash_X^i \phi$, then for any $C$
+ and $\rho: X\to\Tm(C)$, 
+ $$C\Vdash \Gamma\rho~\text{implies}~C\Vdash \phi\rho$$
+ \item Proof: induction on $\Gamma\vdash_X^i \phi$ (long and tedious)
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Completeness for coherent formulas}
+ \begin{itemize}[<+->]
+    \item (long but constructive)
+ \end{itemize}
 \end{frame}
 
 \end{document}
