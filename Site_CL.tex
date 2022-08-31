@@ -69,7 +69,8 @@
 \newcommand{\FTvs}{\Vdash^T\subvs}
 \newcommand{\FTrn}{\Vdash^T\subrn}
 \newcommand{\stdcat}[1]{\textup{\bfseries #1}}
-\newcommand{\blank}{\textup{--}}
+%\newcommand{\blank}{\textup{--}}
+\newcommand{\blank}{\mathord{\operatorname{-}}} %{\color{lightgray}-}}
 
 
 \DeclareMathOperator{\Id}{Id}
@@ -107,7 +108,7 @@ University of Bergen\\
 
 \section{A category of forcing conditions}
 
-\subsection{Conditions as a category}
+\section{Conditions as a category}
 
 \begin{frame}
 \frametitle{Categories of forcing conditions}
@@ -158,6 +159,8 @@ University of Bergen\\
     of potential models. Time to consider a coherent theory $T$ ...       
  \end{itemize}
 \end{frame}
+
+\section{Coverages}
 
 \begin{frame}
 \frametitle{Coverages depending on coherent theories}
@@ -211,6 +214,8 @@ University of Bergen\\
  \end{itemize}
 \end{frame}
 
+\section{Forcing}
+
 \begin{frame}
 \frametitle{Forcing relation based on coverage}
 
@@ -244,8 +249,32 @@ for all $D\in U$, $D=(Y;B)$, $D\Vdash\phi[x=t]$ for some $t\in\Tm(Y)$
 \end{enumerate}
 \end{frame}
 
+\subsection{Examples}
+
 \begin{frame}
-\frametitle{Soundness for all formulas}
+\frametitle{Examples}
+ \begin{itemize}[<+->]
+    \item The law of the excluded middle is not forced:
+    for $\Sigma=\set{p},~T=\es$, \red{not} $(;)\Vdash p\lor\neg p$
+    \item Unlike Kripke semantics, there is no one-world frame. Hence
+    for $\Sigma=\set{p},~T=\es$, surprisingly, $(;)\Vdash \neg\neg p$
+    \item Classical contingencies can sometimes be forced:
+    for $\Sigma=\set{P(\blank)},~T=\es$, \red{never} $C\Vdash \forall x. P(x)$,
+    so $(;)\Vdash (\forall x. P(x))\to\bot$
+    \item Our forcing semantics can be different:
+    for $\Sigma=\set{P(\blank),Q(\blank,\blank),R(\blank,\blank)}$, 
+    $T=\set{\forall x,z.~P(x)\to(Q(x,z)\lor R(x,z))}$, and
+    $\phi= \forall x,y.~(P(x)\land P(y)\land\neg\forall z.(Q(x,z)\lor R(x,z)))$,
+    we have $(;)\Fvs \neg\phi$ and $(;)\Frn \neg\neg\phi$
+    \item The previous also works for $\Fts$, as $\Sigma$ is relational
+    \item Distinguishing $\Fvs$ and $\Fts$ ?
+ \end{itemize}
+\end{frame}
+
+\section{Soundness}
+
+\begin{frame}
+\frametitle{Minimal soundness: forcing the theory itself}
 \begin{itemize}[<+->]
  \item Fix a coherent theory $T$ with its $\covd$ and $\Vdash$    
  \item For all $\phi\in T$ we have $(;)\Vdash\phi$
@@ -282,10 +311,21 @@ for all $D\in U$, $D=(Y;B)$, $D\Vdash\phi[x=t]$ for some $t\in\Tm(Y)$
  \end{itemize}
 \end{frame}
 
+\section{Completeness}
+
 \begin{frame}
 \frametitle{Completeness for coherent formulas}
  \begin{itemize}[<+->]
     \item (long but constructive)
+ \end{itemize}
+\end{frame}
+
+\subsection{Redundant sentences}
+
+\begin{frame}
+\frametitle{Title}
+ \begin{itemize}[<+->]
+    \item 
  \end{itemize}
 \end{frame}
 

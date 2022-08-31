@@ -1,7 +1,8 @@
 % example showing that DFS + state change can give incompleteness
 % even with "offending axiom" last
+% will not terminate: halt swipl to avoid problems 
 
-name(dfserr).
+name(dfs_err).
 
 :- dynamic p/1,q/1,r/1.
 

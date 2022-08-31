@@ -1,4 +1,4 @@
-% or-example:     p ; g is Prolog syntax for p \/ q
+% or-example:     p ; q is Prolog syntax for p \/ q
 
 :- dynamic p/0,q/0,r/0. name(or).
 
