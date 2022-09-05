@@ -261,13 +261,20 @@ for all $D\in U$, $D=(Y;B)$, $D\Vdash\phi[x=t]$ for some $t\in\Tm(Y)$
     \item Classical contingencies can sometimes be forced:
     for $\Sigma=\set{P(\blank)},~T=\es$, \red{never} $C\Vdash \forall x. P(x)$,
     so $(;)\Vdash (\forall x. P(x))\to\bot$
-    \item Our forcing semantics can be different:
-    for $\Sigma=\set{P(\blank),Q(\blank,\blank),R(\blank,\blank)}$, 
+    \item Distinguishing $\Fvs$ and $\Fts$: if $\Sigma=\set{Z(\blank),0}$ and
+    \begin{itemize}[<+->]
+     \item $T=\set{\neg Z(0)}$, then $(x;)\Fvs\neg\neg Z(x)$, 
+    \end{itemize}
+    For $\Sigma=\set{Z(\blank),0}$, $T=\set{Z(0)}$, and
+    $\phi= \forall x.~\neg\neg Z(x)$,
+    we have $(;)\Fts \phi$ and $(;)\Fvs\neg\phi$ 
+    (\red{never} force $\phi$)
+    \item Distinguishing $\Fvs$ and $\Frn$ (BBC paper).
+    For $\Sigma=\set{P(\blank),Q(\blank,\blank),R(\blank,\blank)}$, 
     $T=\set{\forall x,z.~P(x)\to(Q(x,z)\lor R(x,z))}$, and
     $\phi= \forall x,y.~(P(x)\land P(y)\land\neg\forall z.(Q(x,z)\lor R(x,z)))$,
-    we have $(;)\Fvs \neg\phi$ and $(;)\Frn \neg\neg\phi$
-    \item The previous also works for $\Fts$, as $\Sigma$ is relational
-    \item Distinguishing $\Fvs$ and $\Fts$ ?
+    we have $(;)\Fvs \neg\phi$ and $(;)\Frn \neg\neg\phi$ 
+    ($\Sigma$ relational, so $\Fts=\Fvs$)
  \end{itemize}
 \end{frame}
 
