@@ -263,25 +263,32 @@ for all $D\in U$, $D=(Y;B)$, $D\Vdash\phi[x=t]$ for some $t\in\Tm(Y)$
     so $(;)\Vdash (\forall x. P(x))\to\bot$
     \item Distinguishing $\Fvs$ and $\Fts$: if $\Sigma=\set{Z(\blank),0}$ and
     \begin{itemize}[<+->]
-     \item $T=\set{\neg Z(0)}$, then $(x;)\Fvs\neg\neg Z(x)$, 
+     \item $T=\set{\neg Z(0)}$, then $(x;)\Fvs\neg\neg Z(x)$,
+     % assume C->(x;), if Z0 in C, then empty cover, else not C\Fvs\negZx
+     % and we can extend C with Zx to D without empty cover
+     and \red{not} $(x;)\Fts\neg\neg Z(x)$ (since  $[x:=0] : (;)\to(x;)$,
+     $(;)\Fts \neg Z(0)$ and \red{not} $(;)\Fts \bot$)
+     \item Better, add $\exists x.\top$ to $T$ and get for
+     $\phi= \exists x.\neg\neg Z(x)$ that $(;)\Fvs \phi$ 
+     % (;) covered by {(x;)}, take t=x and use $(x;)\Fvs\neg\neg Z(x)$    
+     and \red{not} $(;)\Fts\phi$.
+     % (;) <| {(x,...;)} and neither (;)\Fts\neg\neg Z(0),  
+     % nor (x;)\Fts\neg\neg Z(0), nor (x;)\Fts\neg\neg Z(x) 
     \end{itemize}
-    For $\Sigma=\set{Z(\blank),0}$, $T=\set{Z(0)}$, and
-    $\phi= \forall x.~\neg\neg Z(x)$,
-    we have $(;)\Fts \phi$ and $(;)\Fvs\neg\phi$ 
-    (\red{never} force $\phi$)
-    \item Distinguishing $\Fvs$ and $\Frn$ (BBC paper).
-    For $\Sigma=\set{P(\blank),Q(\blank,\blank),R(\blank,\blank)}$, 
-    $T=\set{\forall x,z.~P(x)\to(Q(x,z)\lor R(x,z))}$, and
-    $\phi= \forall x,y.~(P(x)\land P(y)\land\neg\forall z.(Q(x,z)\lor R(x,z)))$,
-    we have $(;)\Fvs \neg\phi$ and $(;)\Frn \neg\neg\phi$ 
-    ($\Sigma$ relational, so $\Fts=\Fvs$)
+    \item NB $T\vdash\exists x.\top$ and yet it makes a difference
+    \item Distinguishing $\Frn$ from $\Fvs,\Fts$ is done in [BBC, 6.?]
+    by a rather complicated example (with relational $\Sigma$)
+    %For $\Sigma=\set{P(\blank),Q(\blank,\blank),R(\blank,\blank)}$, 
+    %$T=\set{\forall x,z.~P(x)\to(Q(x,z)\lor R(x,z))}$, and
+    %$\phi= \forall x,y.~(P(x)\land P(y)\land\neg\forall z.(Q(x,z)\lor R(x,z)))$,
+    %we have $(;)\Fvs \neg\phi$ and $(;)\Frn \neg\neg\phi$ 
  \end{itemize}
 \end{frame}
 
 \section{Soundness}
 
 \begin{frame}
-\frametitle{Minimal soundness: forcing the theory itself}
+\frametitle{Special soundness: forcing the theory itself}
 \begin{itemize}[<+->]
  \item Fix a coherent theory $T$ with its $\covd$ and $\Vdash$    
  \item For all $\phi\in T$ we have $(;)\Vdash\phi$
@@ -303,11 +310,11 @@ for all $D\in U$, $D=(Y;B)$, $D\Vdash\phi[x=t]$ for some $t\in\Tm(Y)$
 \end{frame}
 
 \begin{frame}
-\frametitle{Soundness of the forcing semantics for all formulas}
+\frametitle{General soundness of the forcing semantics}
 \begin{itemize}[<+->]
  \item Fix a signature $\Sigma$, one of the categories $\Cts,\Cvs,\Crn$, 
  a coverage $\covd$ with its forcing relation by $\Vdash$
- \item No coherent theory $T$ is assumed here
+ \item \red{No} coherent theory $T$ is assumed here
  \item Let $\Gamma\vdash_X^i \phi$ denote intuitionistic 
  provability (explain $X$) 
  \item Soundness: for \red{all} formulas $\Gamma,\phi$ 
@@ -323,19 +330,40 @@ for all $D\in U$, $D=(Y;B)$, $D\Vdash\phi[x=t]$ for some $t\in\Tm(Y)$
 \begin{frame}
 \frametitle{Completeness for coherent formulas}
  \begin{itemize}[<+->]
-    \item (long but constructive)
+  \item Fix a coherent theory $T$ with its $\covd$ and $\Vdash$
+  \item Coherent completeness: for every \red{coherent} sentence
+  $\phi$, if $(,)\Vdash\phi$, then $T\vdash_{\es}^i \phi$
+  \item For the proof we need a version 
+  for open formulas 
+  \item Completeness: for every \red{coherent} sentence
+  $\phi$ with free variables in $X$, any condition $C=(Y;A)$
+  and $\rho: X\to\Tm(Y)$:
+  $$C\Vdash \phi\rho~\text{implies}~T,A\vdash_X^i \phi\rho$$
+  \item Proof by induction on $\phi$
+  \item This proof is constructive, and doesn't use `fairness'
+  \item On the other hand, there is syntax in this semantics
  \end{itemize}
 \end{frame}
 
 \subsection{Redundant sentences}
 
 \begin{frame}
-\frametitle{Title}
+\frametitle{Redundant sentences}
  \begin{itemize}[<+->]
-    \item 
+  \item Let $T$ be a coherent theory. A sentence $\phi$ is called
+  $T$- \emph{redundant} if all coherent sentences $\psi$ such that 
+  $T,\phi \vdash^i \psi$ can be proved already in $T$
+  \item The combination of soundness with coherent completeness
+  yields that $\phi$ is redundant if $\phi$ is forced:
+  if $T\vdash^i \phi\to\psi$, then $\phi\to\psi$ is forced,
+  so $\psi$ is forced, and hence provable if coherent.
+  \item Example (Kock): in the theory of local rings, the following
+  formula is forced and hence redundant (suprise?)
+  $$\neg(x=0\land y=0) \to (\exists z.xz=1) \lor (\exists z.yz=1)$$
  \end{itemize}
 \end{frame}
 
+%local ring: every sum that is a unit has a term that is a unit
 \end{document}
 
 \begin{frame}
