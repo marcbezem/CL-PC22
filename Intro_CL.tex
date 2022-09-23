@@ -177,7 +177,7 @@ University of Bergen
     \]
     \item NB we omit conclusion $A$ in all the nodes, 
     but we should actually keep track of the $\vec{y},\vec{y_i}$.
-    Looking ahead, pairs like $(\vec{y},\Gamma)$ will be
+    Looking ahead, pairs like $(\vec{y};\Gamma)$ will be
     the forcing conditions, $\approx$ finite Kripke worlds.
  \end{itemize}
 \end{frame}
@@ -195,21 +195,19 @@ University of Bergen
 \infer[p\to\bot]{\set{p}}{(\bot)} & \infer[q(y)\to r]{\set{q(c)}}{\set{q(c),r}}
 }
 \]
-    \item Search procedure: until all branches are closed,
+    \item Search procedure: repeat 1,2,3 below exhaustively
     \begin{enumerate}
-    \item pick an open leaf node with some $\Gamma$
-    \item if $\Gamma$ contains the conclusion $A$, close the branch
-    \item otherwise, pick \red{fairly a $\Gamma$-false 
-    instance} of an axiom of $T$    
-    \begin{itemize}
-    \item[3a] if no such instance exists, $\Gamma$ is a model and $A$ underivable
-    \item[3b] else if the conclusion of the instance is $\bot$, close the branch
-    \item[3c] otherwise, extend the branch according to the instance 
-    \end{itemize}
+    \item Pick a leaf node (${}\neq(\bot)$) without $A$ in its $\Gamma$ 
+    (else done)
+    \item Pick \red{fairly a $\Gamma$-false  instance} of an axiom of $T$
+    (else fail: $\Gamma$ is a model of $T$ not containing $A$, 
+    so $A$ is underivable)
+    \item Extend the tree in the leaf node according to the instance  
     \end{enumerate}
-    \item The search procedure stops iff $A$ is derivable (\red{if-part!})
-    %\item Proof steps are simple and intuitive (but can be many)
-    %\item Easy conversion of tableau to natural deduction, lambda term, or stylized natural language
+    \item Fairness is tricky to define, but crucial for the following
+    completeness result:
+    \item The search procedure stops in 1 iff $A$ is derivable (\red{if-part!})
+    \item Example for un/fairness: $\exists y. s(x,y)$ and $p(0)$
  \end{itemize}
 \end{frame}
 
@@ -693,11 +691,11 @@ Coquand
     Let $I$ be an ideal of $k[\vec x]$, and $V(I)$ the set of common zeros (Nullstellen)
     in $K$ of the polynomials in $I$. Then: for any $p\in k[\vec x]$ such that
     $p$ is zero on $V(I)$ there exists an $n$ such that $p^n \in I$.
-    \item Hilbert's Nullstellensatz in its full generality is a 
-    strong classical theorem, with lots of special cases and variations
-    \item Effective Nullstellensatz: \alert{compute} the $n$ such that $p^n \in I$
     \item Example: 
   $\mathbb{Q} \subset \mathbb{C}$, $I=(x^4+2x^2+1)$, $p= x^5-x$, $p^2 \in I$
+    \item In its full generality, Hilbert's Nullstellensatz is a 
+    strong classical theorem, with lots of special cases and variations
+    \item Effective Nullstellensatz: \alert{compute} the $n$ such that $p^n \in I$
     \item Dynamical method in algebra: Effective Nullstellensätze,
     Coste, Lombardi, Roy, 2001 (Dynamic method = CL proof)
 
