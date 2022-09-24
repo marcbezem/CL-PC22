@@ -184,7 +184,7 @@ University of Bergen
 
 
 \begin{frame}\label{proofsearch}
-\frametitle{Example of a derivation in CL}
+\frametitle{Derivation trees in CL, example and general procedure}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]   
     \item Let $T$ consists of $p\lor \exists x.~q(x)$ 
     and $p\to\bot$ and $q(y)\to r$
@@ -195,7 +195,7 @@ University of Bergen
 \infer[p\to\bot]{\set{p}}{(\bot)} & \infer[q(y)\to r]{\set{q(c)}}{\set{q(c),r}}
 }
 \]
-    \item Search procedure: repeat 1,2,3 below exhaustively
+    \item Tree construction: from $\emptyset$, repeat exhaustively 1,2,3 below
     \begin{enumerate}
     \item Pick a leaf node (${}\neq(\bot)$) without $A$ in its $\Gamma$ 
     (else done)
@@ -206,8 +206,8 @@ University of Bergen
     \end{enumerate}
     \item Fairness is tricky to define, but crucial for the following
     completeness result:
-    \item The search procedure stops in 1 iff $A$ is derivable (\red{if-part!})
-    \item Example for un/fairness: $\exists y. s(x,y)$ and $p(0)$
+    \item The tree construction stops in 1 iff $A$ is derivable (\red{if-part!})
+    \item Example for explaining un/fairness: $\exists y. s(x,y)$ and $p(0)$
  \end{itemize}
 \end{frame}
 
@@ -223,14 +223,16 @@ University of Bergen
     \item Proof of completeness: essentially non-constructive.
    %\item 
     Assume $\forall\vec{y}.~(\Gamma \to A)$ holds in any model of $T$.
-    Do the proof search procedure for $\Gamma\vdash_{\vec{y}}^T A$.
-    If it stops we have a proof. If not, the tree has an infinite branch
+    Build the tree for $\Gamma\vdash_{\vec{y}}^T A$. If finite, 
+    it is a proof (2 cannot happen). If not, the tree has an infinite branch
     by K\"onig's Lemma. Collect the set of variables $Y$ and the set
-    of atoms $M$ along the infinite branch. Build a model with domain
+    of atoms $M$ along the infinite branch. 
+    (Note that these sets grow along the branches.)
+    Build a model with domain
     $\mathrm{Tm}^\Sigma(Y)$ and positive diagram $M$. This is a model of
     $T$ (\red{by fairness}) containing $\Gamma$ but not $A$. Contradiction.
  
-    \item Proof theory easily extended to arbitrary coherent formulas
+    \item Proof theory easily extended to arbitrary coherent conclusions
  \end{itemize}
 \end{frame}
 
@@ -256,7 +258,7 @@ University of Bergen
 \frametitle{Translation from FOL to CL}
  \begin{itemize}[<+->]
    \item Idea: introduce two new predicate symbols 
-   $T(\psi),F(\psi)$ for each subformula $\psi$, 
+   $T(\psi),F(\psi)$ for each subformula $\psi$ of given $\varphi$, 
    with arity the number of free variables of $\psi$.
    The rules for signed tableaux are coherent axioms:
    \begin{itemize} 
@@ -312,7 +314,7 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
  \end{itemize} 
  \item By the completeness of tableaux: $\varphi$ is a tautology iff
  $F(\varphi)\vdash^{Coh(\varphi)}_\emptyset \bot$, 
- with $Coh(\varphi)$ as above
+ with $Coh(\varphi)$ all the above axioms
  \end{itemize} 
 \end{frame}
 
