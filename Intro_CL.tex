@@ -221,26 +221,26 @@ University of Bergen
     underivable without a constant in $\Sigma$
     \item Silly, let's assume a constant in $\Sigma$, or just $\exists x.\top$
     \item Proof of completeness: essentially non-constructive.
-   %\item 
+   %\item
     Assume $\forall\vec{y}.~(\Gamma \to A)$ holds in any model of $T$.
-    Build the tree for $\Gamma\vdash_{\vec{y}}^T A$. If finite, 
-    it is a proof (2 cannot happen). If not, the tree has an infinite branch
+    Build the tree for $\Gamma\vdash_{\vec{y}}^T A$. Recall the that 
+    the sets $\Gamma$ grow along the branches. If the tree is finite, 
+    it is a proof (2 cannot happen). If not, it has an infinite branch
     by K\"onig's Lemma. Collect the set of variables $Y$ and the set
-    of atoms $M$ along the infinite branch. 
-    (Note that these sets grow along the branches.)
-    Build a model with domain
+    of atoms $M$ along the infinite branch. Build a model with domain
     $\mathrm{Tm}^\Sigma(Y)$ and positive diagram $M$. This is a model of
     $T$ (\red{by fairness}) containing $\Gamma$ but not $A$. Contradiction.
  
-    \item Proof theory easily extended to arbitrary coherent conclusions
+    \item Proof theory easily extended to arbitrary coherent 
+    conclusions of a coherent theory $T$.
  \end{itemize}
 \end{frame}
 
 \begin{frame}
 \frametitle{Metatheoretic results and remarks}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
-    \item Corollary of completeness: 
-    all classically provable coherent sentences are constructively provable
+    \item Corollary of completeness: given a coherent theory $T$,
+    classically provable coherent sentences are constructively provable
     \item For \alert{geometric} logic this is called Barr's Theorem
     \item Completeness and Barr's Theorem are \alert{not} constructive
     \item Barr's Theorem for \red{coherent} logic can be proved 
@@ -386,6 +386,7 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
    for all atomic $\psi$ and obtain:
    Every FOL theory has a positive semi-definitional extension 
    that is equivalent to a CL theory
+   % new P such that P(x) -> \phi(x), examples above, D&N (xiv),(xv)
    \item Consequences in CL are always constructive
    \item Translation of FOL to CL contains many non-constructive steps,
    often more than necessary
@@ -400,7 +401,7 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
   \item Constructive, with classical logic a conservative extension
   \item Simpler metatheory: proof theory, completeness, 
     conservativity of skolemization (elimination of $\exists$)
-  \item Metamathematics: independence, decision problems
+  \item Applications to metamathematics: independence, decision problems
   \item Other applications:
    \begin{itemize}[<+->]   %  [<+-| alert@+>]
     \item automated reasoning, supporting proof assistants 
