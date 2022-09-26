@@ -1,0 +1,12 @@
+% Puzzle by Hans de Nivelle
+name(hdn).
+:- dynamic g/1,r/1,s/2.
+
+% domain non-empty
+dom(a).
+
+_ axiom not_rg(X)    : (r(X),g(X) => fAlse).
+_ axiom r_2_g(X,Y,Z) : (r(X),s(X,Y),s(Y,Z) => g(Z)).
+_ axiom g_1_r(X,Y)   : (g(X),s(X,Y) => r(Y)).
+_ axiom r_or_g(X)    : (dom(X) => r(X) ; g(X)).
+_ axiom serial(X)    : (dom(X) => dom(Y),s(X,Y)).

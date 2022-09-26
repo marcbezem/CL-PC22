@@ -242,12 +242,13 @@ University of Bergen
     \item Corollary of completeness: given a coherent theory $T$,
     classically provable coherent sentences are constructively provable
     \item For \alert{geometric} logic this is called Barr's Theorem
+    (anticipated by Lawvere and Deligne)
     \item Completeness and Barr's Theorem are \alert{not} constructive
     \item Barr's Theorem for \red{coherent} logic can be proved 
     constructively using a cut-elimination argument %(Coste \& Coste, Negri) 
     \item Coherent completeness wrt forcing semantics is constructively
     provable, but does not give the conservativity of classical reasoning
-    \item NB: the forcing semantics is sound wrt intuitionistic logic 
+    \item NB: the forcing semantics is sound wrt cosntructive logic 
     for arbitrary formulas
  \end{itemize}
 \end{frame}
@@ -257,20 +258,20 @@ University of Bergen
 \begin{frame}
 \frametitle{Translation from FOL to CL}
  \begin{itemize}[<+->]
-   \item Idea: introduce two new predicate symbols 
-   $T(\psi),F(\psi)$ for each subformula $\psi$ of given $\varphi$, 
-   with arity the number of free variables of $\psi$.
+   \item Idea: introduce two new predicate symbols $T(\psi),F(\psi)$ 
+   for each subformula $\psi$ of a given formula $\varphi$, with 
+   the arities of $T(\psi),F(\psi)$ being the number of free variables of $\psi$.
    The rules for signed tableaux are coherent axioms:
+   
    \begin{itemize} 
    \item 
- if $\psi(\vec{x})\equiv\psi_1\wedge\psi_2$,
+ if $\psi(\vec{x})\equiv\psi_1\wedge\psi_2$, then
 $\left\{\begin{array}{ll}
 T(\psi)(\vec{x})\to T(\psi_1)(\vec{x})\wedge T(\psi_2)(\vec{x})\\
 F(\psi)(\vec{x})\to F(\psi_1)(\vec{x})\vee F(\psi_2)(\vec{x})
 \end{array}\right.$
 
 \item
-
  if $\psi(\vec{x})\equiv\psi_1\vee \psi_2$ then ...
 %$\left\{\begin{array}{ll}
 %T(\psi)(\vec{x})\to T(\psi_1)(\vec{x})\vee T(\psi_2)(\vec{x})\\
@@ -285,15 +286,13 @@ F(\psi)(\vec{x})\to T(\psi_1)(\vec{x})\wedge F(\psi_2)(\vec{x})
 \end{array}\right.$
 
 \item
-
- if $\psi(\vec{x})\equiv\neg \psi_1$ then 
-$\left\{\begin{array}{ll}
-T(\psi)(\vec{x})\to F(\psi _1)(\vec{x})\\
-F(\psi)(\vec{x})\to T(\psi _1)(\vec{x})
-\end{array}\right.$
+ if $\psi(\vec{x})\equiv\neg \psi_1$ then ...
+%$\left\{\begin{array}{ll}
+%T(\psi)(\vec{x})\to F(\psi _1)(\vec{x})\\
+%F(\psi)(\vec{x})\to T(\psi _1)(\vec{x})
+%\end{array}\right.$
 
 \item
-
  if $\psi(\vec{x})\equiv\forall y.\psi_1(\vec{x},y)$ then 
 $\left\{\begin{array}{ll}
 T(\psi)(\vec{x})\to T(\psi_1)(\vec{x},\red{y})\\
@@ -301,7 +300,6 @@ F(\psi)(\vec{x})\to \exists y.F(\psi_1)(\vec{x},y)
 \end{array}\right.$
 
 \item
-
  if $\psi(\vec{x})\equiv\exists y.\psi_1(\vec{x},y)$ then 
 $\left\{\begin{array}{ll}
 T(\psi)(\vec{x})\to \exists y.T(\psi_1)(\vec{x},y)\\
@@ -311,10 +309,12 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
 \item
  if $\psi(\vec{x})$ is atomic then 
  $(T(\psi)(\vec{x})\wedge F(\psi)(\vec{x})) \to \bot$
- \end{itemize} 
- \item By the completeness of tableaux: $\varphi$ is a tautology iff
- $F(\varphi)\vdash^{Coh(\varphi)}_\emptyset \bot$, 
- with $Coh(\varphi)$ all the above axioms
+\end{itemize}  
+ 
+   \item By the completeness of signed tableaux: 
+   $\varphi$ is a tautology iff
+   $F(\varphi)\vdash^{Coh(\varphi)}_\emptyset \bot$, 
+   with $Coh(\varphi)$ all the above axioms
  \end{itemize} 
 \end{frame}
 
@@ -515,8 +515,7 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
 \begin{frame}
 \frametitle{Puzzle, function eliminated}
  \begin{itemize}[<+->]
-    \item Living dangerously: demo of {\tt hdn.co} in Colog (Fisher, '12)
-    \item Just in case the demo fails: refutation on blackboard
+   \item See {\tt LABresources/hdn.in}
     \begin{enumerate}
       \item $r(x) \vee g(x)$ 
       \item $r(x) \wedge g(x) \imp \bot$
@@ -525,8 +524,7 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
       \item $\exists x.~\top$
       \item $\exists y.\,s(x,y)$
   \end{enumerate}
-  \item Solution of puzzle before eliminating 
-  the function:
+  \item Solution of version of puzzle with the function:
     \begin{itemize}
     \item Note that the substitution principle is valid
     \item Substitute $(s(x) = y)$ for $s(x,y)$ in 3,4,6:
@@ -545,7 +543,7 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
 \begin{frame}
 \frametitle{Depth-first proof search in CL}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
-    \item Recall the search procedure on slide \ref{proofsearch}
+    \item Recall the tree construction on slide \ref{proofsearch}
     \item Any open leaf is fine, so we always take the leftmost
     \item What instance of which $\Gamma$-false axiom to pick?
     \item NB two trees: derivation tree and the search space
@@ -560,7 +558,7 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
        \item Existential axioms (cause new variables)
        \item Disjunctive existential axioms (cause both, the worst)
     \end{enumerate}
-    \item Example: $\exists y.\,s(x,y)$ should not be put first!
+    \item Example: $\exists y.\,s(x,y)$ should never be put first!
  \end{itemize}
 \end{frame}
 
@@ -584,7 +582,7 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
   \item With only constants, depth-first complete for forms 1 and 2
   \item Depth-first search not complete for \red{one single existential} clause, subtle:
 \texttt{  p(a). p(b). q(b) -> goal. p(X),p(Y) -> dom(U),p(U),q(X),r(Y).}
-    \item Wanted: fair application of axioms of form 3 and 4 
+    \item Wanted: fair application of axioms of form 3 and 4 (sl.\ 21)
     \item Cycling depth-first: depth-first for forms 1 and 2, plus cycling
     through the (disjunctive) existential clauses, using instances
     with the `oldest' constants first. Complete.
