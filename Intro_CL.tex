@@ -272,42 +272,42 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x})\vee F(\psi_2)(\vec{x})
 \end{array}\right.$
 
 \item
- if $\psi(\vec{x})\equiv\psi_1\vee \psi_2$ then ...
+ if $\psi(\vec{x})\equiv\psi_1\vee \psi_2$, then ...
 %$\left\{\begin{array}{ll}
 %T(\psi)(\vec{x})\to T(\psi_1)(\vec{x})\vee T(\psi_2)(\vec{x})\\
 %F(\psi)(\vec{x})\to F(\psi_1)(\vec{x})\wedge F(\psi_2)(\vec{x})
 %\end{array}\right.$
 
 \item
-  if $\psi(\vec{x})\equiv\psi_1\to \psi_2$ then 
+  if $\psi(\vec{x})\equiv\psi_1\to \psi_2$, then 
 $\left\{\begin{array}{ll}
 T(\psi)(\vec{x})\to F(\psi_1)(\vec{x})\vee T(\psi_2)(\vec{x})\\
 F(\psi)(\vec{x})\to T(\psi_1)(\vec{x})\wedge F(\psi_2)(\vec{x})
 \end{array}\right.$
 
 \item
- if $\psi(\vec{x})\equiv\neg \psi_1$ then ...
+ if $\psi(\vec{x})\equiv\neg \psi_1$, then ...
 %$\left\{\begin{array}{ll}
 %T(\psi)(\vec{x})\to F(\psi _1)(\vec{x})\\
 %F(\psi)(\vec{x})\to T(\psi _1)(\vec{x})
 %\end{array}\right.$
 
 \item
- if $\psi(\vec{x})\equiv\forall y.\psi_1(\vec{x},y)$ then 
+ if $\psi(\vec{x})\equiv\forall y.\psi_1(\vec{x},y)$, then 
 $\left\{\begin{array}{ll}
 T(\psi)(\vec{x})\to T(\psi_1)(\vec{x},\red{y})\\
 F(\psi)(\vec{x})\to \exists y.F(\psi_1)(\vec{x},y)
 \end{array}\right.$
 
 \item
- if $\psi(\vec{x})\equiv\exists y.\psi_1(\vec{x},y)$ then 
+ if $\psi(\vec{x})\equiv\exists y.\psi_1(\vec{x},y)$, then 
 $\left\{\begin{array}{ll}
 T(\psi)(\vec{x})\to \exists y.T(\psi_1)(\vec{x},y)\\
 F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
 \end{array}\right.$
 
 \item
- if $\psi(\vec{x})$ is atomic then 
+ if $\psi(\vec{x})$ is atomic, then 
  $(T(\psi)(\vec{x})\wedge F(\psi)(\vec{x})) \to \bot$
 \end{itemize}  
  
@@ -321,7 +321,7 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
 \begin{frame}
 \frametitle{Example in propositional logic: Peirce's Law}
  \begin{itemize}[<+->] 
-    \item Peirce's Law: $\varphi\equiv((p\imp q)\imp p)\imp p$
+    \item Peirce's Law: $\varphi :\equiv((p\imp q)\imp p)\imp p$
     \item To prove: $F(((p\imp q)\imp p)\imp p) 
     \vdash^{Coh(\varphi)}_\emptyset\bot$    
     \item Part of $Coh(\varphi)$ that is actually used:
@@ -334,8 +334,8 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
     \end{enumerate}
     \item Proof: use 1, 2, 3 and split on $F(p\imp q) \vee T(p)$, ...
     \item Details on the blackboard
-    \item Proof of $\varphi$: take $T\equiv\lambda\varphi.\,\varphi$,
-     $F\equiv\lambda\varphi.\,\neg\varphi$. Then 1,2,3,4 are easy
+    \item Proof of $\varphi$: take $T:\equiv\lambda\varphi.\,\varphi$,
+     $F:\equiv\lambda\varphi.\,\neg\varphi$. Then 1,2,3,4 are easy
      (but classical), the CL proof is also a proof 
      in propositional logic, and we finish by RAA
  \end{itemize}
@@ -344,7 +344,7 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
 \begin{frame}
 \frametitle{Example in predicate logic: the Drinker's Paradox}
  \begin{itemize}[<+->] 
-    \item Drinker's Paradox: $\varphi\equiv\exists x.~(d(x)\to \forall y.d(y))$
+    \item Drinker's Paradox: $\varphi:\equiv\exists x.~(d(x)\to \forall y.d(y))$
     \item To prove: $F(\exists x.~d(x)\to \forall y.d(y))) 
     \vdash^{Coh(\varphi)}_\emptyset\bot$    
     \item Part of $Coh(\varphi)$ that is actually used:
@@ -363,8 +363,8 @@ F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
     and get $T(d(c)) \wedge F(\forall y.d(y))$, so by 4 we get $c'$
     with $F(d(c'))$, ...
     \item Details on the blackboard    
-    \item Proof of $\varphi$ in FOL: take $T\equiv\lambda\varphi.\,\varphi$,
-     $F\equiv\lambda\varphi.\,\neg\varphi$. Then 1--5 are easy
+    \item Proof of $\varphi$ in FOL: take $T:\equiv\lambda\varphi.\,\varphi$,
+     $F:\equiv\lambda\varphi.\,\neg\varphi$. Then 1--5 are easy
      (Tarski and classical), the CL proof is also a proof in FOL,
      and we finish by RAA
  \end{itemize}

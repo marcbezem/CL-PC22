@@ -127,7 +127,7 @@ University of Bergen\\
     \item Morphisms denoted as $f : (Y;B) \to (X;A)$, where $f$ is a 
     \emph{term substitution} $X \to \Tm(Y)$ such that $Af \subseteq B$
     \item Composition $f\circ g$ of $g : (Z;C) \to (Y;B)$ with $f$ above is
-    the substitution $X \to \Tm(Y)$ that is the composition $fg$
+    the substitution $X \to \Tm(Z)$ that is the composition $fg$
     (in diagram order!) of the respective substitutions
     \item Indentity morphisms $(X;A)\to(X;A)$ are identity 
     substitutions $X\to X$
@@ -207,7 +207,7 @@ University of Bergen\\
     \item Lemma ${\covd}3$. If $C \covd U$ and for every $D\in U$
     we have a $V_D \covs D$, then $C\covd\bigcup_{D\in U} V_D$.
     Proof: induction on $\covd$. Intuition: transitivity.
-    \item Together with ${\covd}0:~C \covd\set{C}$, ${\covd}$0--3
+    \item Together with ${\covd}0:~C \covd\set{C}$, ${\covd}$0--${\covd}$3
     provide what is needed for the coming definition of forcing to
     give a sound and complete semantics.
     \item Further abstraction $\rightsquigarrow$ Grothendieck topology and site
@@ -229,13 +229,13 @@ $C\Vdash\phi$ by induction on $\phi$ as follows:
 
 \item $C\Vdash\bot$ if $C\covd\es$ (i.e., $A\vdash_X \bot$, explain)
 
-\item $C\Vdash\phi$ if $\phi$ is a fact and there is $U \covs C$ such that
+\item $C\Vdash\phi$ if $\phi$ is an atom and there is $U \covs C$ such that
 $\phi\in B$ for all $(Y;B)\in U$ (i.e., $A\vdash_X \phi$)
 
 \item $C\Vdash\phi_1 \land \phi_2$ if $C\Vdash\phi_1$ and $C\Vdash\phi_2$
 
 \item $C\Vdash\phi_1 \lor \phi_2$ if for some $U$ we have
-$C\covd U$ and $D\Vdash\phi_1$ or $D\Vdash\phi_2$ for all $D\in U$
+$C\covd U$ and ($D\Vdash\phi_1$ or $D\Vdash\phi_2$) for all $D\in U$
 
 \item $C\Vdash\phi_1 \to \phi_2$ if for all $D$ and morphisms $f:D\to C$
 we have $D\Vdash\phi_2f$ whenever $D\Vdash\phi_1f$
@@ -277,7 +277,7 @@ for all $D\in U$, $D=(Y;B)$, $D\Vdash\phi[x=t]$ for some $t\in\Tm(Y)$
      % nor (x;)\Fts\neg\neg Z(0), nor (x;)\Fts\neg\neg Z(x) 
     \end{itemize}
     \item NB $T\vdash\exists x.\top$ and yet it makes a difference
-    \item Distinguishing $\Frn$ from $\Fvs,\Fts$ is done in [BBC, 6.?]
+    \item Distinguishing $\Frn$ from $\Fvs,\Fts$ is done in [BBC, 6.4]
     by a rather complicated example (with relational $\Sigma$)
     %For $\Sigma=\set{P(\blank),Q(\blank,\blank),R(\blank,\blank)}$, 
     %$T=\set{\forall x,z.~P(x)\to(Q(x,z)\lor R(x,z))}$, and
@@ -338,7 +338,7 @@ for all $D\in U$, $D=(Y;B)$, $D\Vdash\phi[x=t]$ for some $t\in\Tm(Y)$
   for open formulas 
   \item Completeness: for every \red{coherent} sentence
   $\phi$ with free variables in $X$, any condition $C=(Y;A)$
-  and $\rho: X\to\Tm(Y)$:
+  and $\rho: X\to\Tm(Y)$,
   $$C\Vdash \phi\rho~\text{implies}~T,A\vdash_X^i \phi\rho$$
   \item Proof by induction on $\phi$
   \item This proof is constructive, and doesn't use `fairness'
@@ -356,8 +356,9 @@ for all $D\in U$, $D=(Y;B)$, $D\Vdash\phi[x=t]$ for some $t\in\Tm(Y)$
   $T,\phi \vdash^i \psi$ can be proved already in $T$
   \item The combination of soundness with coherent completeness
   yields that $\phi$ is redundant if $\phi$ is forced:
-  if $T\vdash^i \phi\to\psi$, then $\phi\to\psi$ is forced,
-  so $\psi$ is forced, and hence provable if coherent.
+  if $T\vdash^i \phi\to\psi$, then by soundness $\phi\to\psi$ is forced.
+  Hence if $\phi$ is forced, then also $\psi$ is forced, 
+  and hence provable in $T$ if coherent.
   \item Example (Kock): in the theory of local rings, the following
   formula is forced and hence redundant (suprise?)
   $$\neg(x=0\land y=0) \to (\exists z.xz=1) \lor (\exists z.yz=1)$$
