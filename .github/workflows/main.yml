@@ -1,0 +1,20 @@
+name: Compile LaTeX
+on: [push]
+jobs:
+  upload_pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up git repository
+        uses: actions/checkout@v3
+      - name: Compile
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: |
+            Intro_CL.tex
+            Site_CL.tex
+      - run: mkdir slides && cp Intro_CL.tex Site_CL.tex slides
+      - name: Upload artefact
+        uses: actions/upload-artifact@v3
+        with:
+          name: pdfs
+          path: slides
