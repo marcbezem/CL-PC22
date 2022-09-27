@@ -9,9 +9,10 @@ jobs:
       - name: Compile
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: Intro_CL.tex
+          root_file: Intro_CL.tex Site_CL.tex
+      - run: mkdir slides && cp Intro_CL.tex Site_CL.tex slides
       - name: Upload artefact
         uses: actions/upload-artifact@v3
         with:
-          name: Intro_CL.pdf
-          path: Intro_CL.pdf
+          name: pdfs
+          path: slides
