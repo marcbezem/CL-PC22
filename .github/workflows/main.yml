@@ -6,15 +6,23 @@ jobs:
     steps:
       - name: Set up git repository
         uses: actions/checkout@v3
-      - name: Compile
+      - name: Compile LaTeX documents (currently 2)
         uses: xu-cheng/latex-action@v2
         with:
           root_file: |
             Intro_CL.tex
             Site_CL.tex
-      - run: mkdir slides && cp Intro_CL.tex Site_CL.tex slides
+      - run: mkdir slides && cp Intro_CL.pdf Site_CL.pdf slides
       - name: Upload artefact
         uses: actions/upload-artifact@v3
         with:
           name: pdfs
-          path: slides
+          path: slides          
+      - name: Publish to GitHub pages
+        if: success()  # && github.ref == 'refs/heads/master'
+        uses: crazy-max/ghaction-github-pages@v1
+        with:
+          target_branch: gh-pages
+          build_dir: slides/
+        # env:
+        #  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}    
