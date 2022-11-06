@@ -7,7 +7,7 @@ jobs:
       - name: Set up git repository
         uses: actions/checkout@v3
       - name: Compile LaTeX documents (currently 2)
-        uses: xu-cheng/latex-action@v2
+        uses: xu-cheng/latex-action@v3
         with:
           root_file: |
             Intro_CL.tex
@@ -20,7 +20,7 @@ jobs:
           path: slides          
       - name: Publish to GitHub pages
         if: success()  # && github.ref == 'refs/heads/master'
-        uses: crazy-max/ghaction-github-pages@v2
+        uses: crazy-max/ghaction-github-pages@v3
         with:
           target_branch: gh-pages
           build_dir: slides/
