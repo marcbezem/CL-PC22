@@ -20,7 +20,7 @@ jobs:
           path: slides          
       - name: Publish to GitHub pages
         if: success()  # && github.ref == 'refs/heads/master'
-        uses: crazy-max/ghaction-github-pages # removed version
+        uses: crazy-max/ghaction-github-pages@v2
         with:
           target_branch: gh-pages
           build_dir: slides/
