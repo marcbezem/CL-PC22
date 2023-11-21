@@ -1,0 +1,699 @@
+\documentclass[handout,11pt]{beamer}
+%\documentclass[slides]{beamer}
+
+%\usetheme{Warsaw}
+\usetheme{Montpellier}
+\usefonttheme[onlymath]{serif}
+\setbeamertemplate{headline}{}
+\setbeamertemplate{navigation symbols}{}
+
+%\usepackage[english,norsk,german]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage{proof}
+\usepackage{url}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage{graphics}
+
+\usepackage{color}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\green}[1]{\textcolor{green}{#1}}
+
+%\usepackage[all]{xy}
+\usepackage{amssymb,amsmath}
+
+
+\newtheorem{proposition}{Proposition}
+
+\newcommand{\weg}[1]{}
+\newcommand{\Prop}{\mathit{Prop}}
+\newcommand{\nat}{\mathbb{N}}
+\newcommand{\set}[1]{\{#1\}}
+\newcommand{\imp}{\rightarrow}
+\newcommand{\liff}{\leftrightarrow}
+%\newcommand{\proves}{\vdash}
+\newcommand{\deca}{${\lor}{\exists}{\land}$}
+
+\title{Skolem's Theorem in Coherent Logic}
+\author{Marc Bezem\\
+Department of Informatics\\
+University of Bergen
+\mbox{ }\\
+(jww Thierry Coquand, 2019,\\
+DOI: {\tt 10.3233/FI-2019-1853})
+}
+
+
+\date{December 2023}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\section[Outline]{}
+\frame{\tableofcontents}
+
+
+\section{Crash course in Coherent Logic (CL)}
+
+\subsection{Basics}
+
+\begin{frame}
+\frametitle{Coherent logic preliminaries 1}
+ \begin{itemize}[<+->]   %  [<+-| alert@+>]
+    \item Fix a finite first-order signature $\Sigma$
+    \item Coherent implications (sentences): $\forall\vec{x}.~(C \to D)$ 
+    with $C,D$ positive formulas
+    \item Coherent theory: axiomatized by coherent sentences
+    \item Notation: we leave out the universal prefix, 
+    and omit the premiss `$C\to{}$' if $C\equiv\top$
+    \item Discuss: $\exists y.\top$ and $\exists y.\bot$ and
+    $\forall y.\top$ and $\forall y.\bot$
+    \item Full compliance with Tarski semantics if $\Sigma$ has a constant
+    (CL allows empty models by default)
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Examples}
+ \begin{itemize}[<+->]   %  [<+-| alert@+>]
+    \item all usual equality axioms, including congruence
+    \item $p\lor np$ and $p\land np\to\bot$ 
+    (NB $p\lor\neg p$ is \red{not} coherent)
+    \item lattice theory: $%\forall x,y.~
+    \exists z.~\mathit{meet}(x,y,z)$
+    \item geometry: $%\forall x,y.~
+    p(x)\land p(y) \to \exists z.~\ell(z) \land i(x,z) \land i(y,z)$
+    \item rewriting, $\diamond$-property: $%\forall x,y,z.~
+    r(x,y)\land r(x,z) \to \exists u.~r(y,u)\land r(z,u)$
+    \item weak-tc-elim: $%\forall x,y.~
+    r^*(x,y)\to (x=y)\lor\exists z.~r(x,z)\land r^*(z,y)$     
+    \item seriality: $%\forall x.~
+    \exists y.~s(x,y)$ (who needs a function?)
+    \item field theory: $%\forall x.~
+    (x=0) \lor \exists y.~(x\cdot y=1)$
+    \item local ring: 
+    $\exists y.~(x\cdot y = 1) \lor (\exists y.~((1-x)\cdot y = 1)$
+    (equivalent to the more common: if $x+y$ is a unit, then $x$ is a
+    unit or $y$ is a unit).
+ \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{History of CL}
+ \begin{itemize}[<+->]   %  [<+-| alert@+>]
+    \item Skolem (1920s): coherent formulations of lattice theory 
+    and projective geometry, calling the axioms ``Erzeugungsprinzipien"
+    (production rules), anticipating ground forward reasoning. Using CL,
+    \begin{itemize}[<+->]   %  [<+-| alert@+>]
+    \item Skolem solved a decision problem in lattice theory
+    \item Skolem gave a method to test in/dependence from the axioms
+    of plane projective geometry (example: Desargues' Axiom)
+    \end{itemize}
+    
+    \item Grothendieck (1960s): geometric morphisms preserve geometric
+              logic (= coherent logic + infinitary disjunction).
+    Quite complicated stuff, but we'll stick to Tarski
+    (there is also a forcing semantics of CL).
+ \end{itemize}
+\end{frame}
+
+\subsection{Proof theory for CL}
+
+\begin{frame}
+\frametitle{A proof theory for CL}
+ \begin{itemize}[<+->]   %  [<+-| alert@+>]
+    \item In short: ground forward reasoning with case distinction and
+    introduction of witnesses (ground tableau reasoning)
+    \item In full: define inductively $\Gamma\vdash_{\vec{y}}^T A$, where 
+    $A$ ($\Gamma$) atom (set of atoms) with all variables in $\vec{y}$, in case
+    \begin{enumerate}
+    \item[(base)] $A$ is in $\Gamma$, or in case 
+    \item[(step)] $T$ has an axiom $\forall\vec{x}.~
+    (C \to (\exists\vec{y}_1.B_1) \lor \cdots \lor (\exists\vec{y}_k.B_k))$
+    such that for some sequence of terms $\vec{t}$ with variables in $\vec{y}$
+    we have
+    \begin{itemize}
+    \item $C[\vec{t}/\vec{x}]$ is a subset of $\Gamma$, and
+    \item $\Gamma,B_i[\vec{t}/\vec{x}]\vdash^T_{\vec{y},\vec{y_i}} A
+          ~\text{for all $i = 1,\dots,n$}$ \quad
+          (\red{NB $\vec{y_i}$ fresh wrt $\vec{y}$})
+    \end{itemize}
+    \end{enumerate}
+    \item Rough visualization as a tree with inner nodes like 
+    \[
+\infer[\mathit{axiom}]{\Gamma}{\Gamma,B_1[\vec{t}/\vec{x}] \quad\cdots\quad \Gamma,B_n[\vec{t}/\vec{x}]}
+    \]
+    \item NB we omit conclusion $A$ in all the nodes, 
+    but we should actually keep track of the $\vec{y},\vec{y_i}$.
+    (In the forcing semantics, pairs like $(\vec{y};\Gamma)$ will be
+    the forcing conditions, $\approx$ finite Kripke worlds.)
+ \end{itemize}
+\end{frame}
+
+
+\begin{frame}\label{proofsearch}
+\frametitle{Derivation trees in CL, example and general procedure}
+ \begin{itemize}[<+->]   %  [<+-| alert@+>]   
+    \item Let $T$ consists of $p\lor \exists x.~q(x)$ 
+    and $p\to\bot$ and $q(y)\to r$
+    \item Derivation tree for $\emptyset\vdash_{\emptyset}^T r$
+    \[
+\infer[p\vee \exists x.~q(x)]{\emptyset}
+{
+\infer[p\to\bot]{\set{p}}{(\bot)} & \infer[q(y)\to r]{\set{q(c)}}{\set{q(c),r}}
+}
+\]
+    \item Tree construction: from $\emptyset$, repeat exhaustively 1,2,3 below
+    \begin{enumerate}
+    \item Pick a leaf node (${}\neq(\bot)$) without $A$ in its $\Gamma$ 
+    (else done)
+    \item Pick \red{fairly a $\Gamma$-false  instance} of an axiom of $T$
+    (else fail: $\Gamma$ is a model of $T$ not containing $A$, 
+    so $A$ is underivable)
+    \item Extend the tree in the leaf node according to the instance  
+    \end{enumerate}
+    \item Fairness is tricky to define, but crucial for the following
+    completeness result (to be proved on the next slide):
+    \item The tree construction stops in 1 iff $A$ is derivable (\red{if-part!})
+    \item Example for explaining un/fairness: $\exists y. s(x,y)$ and $p(0)$
+ \end{itemize}
+\end{frame}
+
+\subsection{Metatheory}
+
+\begin{frame}
+\frametitle{Soundness and completeness wrt Tarski semantics}
+ \begin{itemize}[<+->]   %  [<+-| alert@+>]
+    \item Soundness easily proved by induction on $\Gamma\vdash_{\vec{y}}^T A$
+    \item \red{Not} complete: $\emptyset\vdash_{\emptyset}^{\forall x.\bot} p$
+    underivable without a constant in $\Sigma$
+    \item Silly, let's assume a constant in $\Sigma$, or just $\exists x.\top$
+    \item Proof of completeness: essentially non-constructive.
+   %\item
+    Assume $\forall\vec{y}.~(\Gamma \to A)$ holds in any model of $T$.
+    Build the tree for $\Gamma\vdash_{\vec{y}}^T A$. Recall the that 
+    the sets $\Gamma$ grow along the branches. If the tree is finite, 
+    it is a proof (2 cannot happen). If not, it has an infinite branch
+    by K\"onig's Lemma. Collect the set of variables $Y$ and the set
+    of atoms $M$ along the infinite branch. Build a model with domain
+    $\mathrm{Tm}^\Sigma(Y)$ and positive diagram $M$. This is a model of
+    $T$ (\red{by fairness}) containing $\Gamma$ but not $A$. Contradiction.
+ 
+    \item Proof theory easily extended to arbitrary coherent 
+    conclusions of a coherent theory $T$.
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Metatheoretic results and remarks}
+ \begin{itemize}[<+->]   %  [<+-| alert@+>]
+    \item Corollary of completeness: given a coherent theory $T$,
+    classically provable coherent sentences are constructively provable
+    \item For \alert{geometric} logic this is called Barr's Theorem
+    (anticipated by Lawvere and Deligne)
+    \item Completeness and Barr's Theorem are \alert{not} constructive
+    \item Barr's Theorem for \red{coherent} logic can be proved 
+    constructively using a cut-elimination argument %(Coste \& Coste, Negri) 
+    \item Coherent completeness wrt forcing semantics is constructively
+    provable, but does not give the conservativity of classical reasoning
+    \item NB: the forcing semantics is sound wrt cosntructive logic 
+    for arbitrary formulas
+ \end{itemize}
+\end{frame}
+
+\subsection{Translation from FOL to CL}
+
+\begin{frame}
+\frametitle{Translation from FOL to CL}
+ \begin{itemize}[<+->]
+   \item Idea: introduce two new predicate symbols $T(\psi),F(\psi)$ 
+   for each subformula $\psi$ of a given formula $\varphi$, with 
+   the arities of $T(\psi),F(\psi)$ being the number of free variables of $\psi$.
+   The rules for signed tableaux are coherent axioms:
+   
+   \begin{itemize} 
+   \item 
+ if $\psi(\vec{x})\equiv\psi_1\wedge\psi_2$, then
+$\left\{\begin{array}{ll}
+T(\psi)(\vec{x})\to T(\psi_1)(\vec{x})\wedge T(\psi_2)(\vec{x})\\
+F(\psi)(\vec{x})\to F(\psi_1)(\vec{x})\vee F(\psi_2)(\vec{x})
+\end{array}\right.$
+
+\item
+ if $\psi(\vec{x})\equiv\psi_1\vee \psi_2$, then ...
+%$\left\{\begin{array}{ll}
+%T(\psi)(\vec{x})\to T(\psi_1)(\vec{x})\vee T(\psi_2)(\vec{x})\\
+%F(\psi)(\vec{x})\to F(\psi_1)(\vec{x})\wedge F(\psi_2)(\vec{x})
+%\end{array}\right.$
+
+\item
+  if $\psi(\vec{x})\equiv\psi_1\to \psi_2$, then 
+$\left\{\begin{array}{ll}
+T(\psi)(\vec{x})\to F(\psi_1)(\vec{x})\vee T(\psi_2)(\vec{x})\\
+F(\psi)(\vec{x})\to T(\psi_1)(\vec{x})\wedge F(\psi_2)(\vec{x})
+\end{array}\right.$
+
+\item
+ if $\psi(\vec{x})\equiv\neg \psi_1$, then ...
+%$\left\{\begin{array}{ll}
+%T(\psi)(\vec{x})\to F(\psi _1)(\vec{x})\\
+%F(\psi)(\vec{x})\to T(\psi _1)(\vec{x})
+%\end{array}\right.$
+
+\item
+ if $\psi(\vec{x})\equiv\forall y.\psi_1(\vec{x},y)$, then 
+$\left\{\begin{array}{ll}
+T(\psi)(\vec{x})\to T(\psi_1)(\vec{x},\red{y})\\
+F(\psi)(\vec{x})\to \exists y.F(\psi_1)(\vec{x},y)
+\end{array}\right.$
+
+\item
+ if $\psi(\vec{x})\equiv\exists y.\psi_1(\vec{x},y)$, then 
+$\left\{\begin{array}{ll}
+T(\psi)(\vec{x})\to \exists y.T(\psi_1)(\vec{x},y)\\
+F(\psi)(\vec{x})\to F(\psi_1)(\vec{x},\red{y})
+\end{array}\right.$
+
+\item
+ if $\psi(\vec{x})$ is atomic, then 
+ $(T(\psi)(\vec{x})\wedge F(\psi)(\vec{x})) \to \bot$
+\end{itemize}  
+ 
+   \item By the completeness of signed tableaux: 
+   $\varphi$ is a tautology iff
+   $F(\varphi)\vdash^{Coh(\varphi)}_\emptyset \bot$, 
+   with $Coh(\varphi)$ all the above axioms
+ \end{itemize} 
+\end{frame}
+
+\begin{frame}
+\frametitle{Example in propositional logic: Peirce's Law}
+ \begin{itemize}[<+->] 
+    \item Peirce's Law: $\varphi :\equiv((p\imp q)\imp p)\imp p$
+    \item To prove: $F(((p\imp q)\imp p)\imp p) 
+    \vdash^{Coh(\varphi)}_\emptyset\bot$    
+    \item Part of $Coh(\varphi)$ that is actually used:
+    \begin{enumerate}[<+->]
+    	%\item $F(((p\imp q)\imp p)\imp p)$
+    	\item $F(((p\imp q)\imp p)\imp p) \imp (T((p\imp q)\imp p) \wedge F(p))$
+    	\item $T((p\imp q)\imp p) \imp (F(p\imp q) \vee T(p))$
+    	\item $F(p\imp q) \imp (T(p) \wedge F(q))$
+    	\item $(T(p) \wedge F(p)) \imp \bot$
+    \end{enumerate}
+    \item Proof: use 1, 2, 3 and split on $F(p\imp q) \vee T(p)$, ...
+    \item Details on the blackboard
+    \item Proof of $\varphi$: take $T:\equiv\lambda\varphi.\,\varphi$,
+     $F:\equiv\lambda\varphi.\,\neg\varphi$. Then 1,2,3,4 are easy
+     (but classical), the CL proof is also a proof 
+     in propositional logic, and we finish by RAA
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Example in predicate logic: the Drinker's Paradox}
+ \begin{itemize}[<+->] 
+    \item Drinker's Paradox: $\varphi:\equiv\exists x.~(d(x)\to \forall y.d(y))$
+    \item To prove: $F(\exists x.~d(x)\to \forall y.d(y))) 
+    \vdash^{Coh(\varphi)}_\emptyset\bot$    
+    \item Part of $Coh(\varphi)$ that is actually used:
+    \begin{enumerate}[<+->]
+    	%\item $F(\exists x.~d(x)\to \forall y.d(y)))$
+    	\item \red{no} take-off without $\exists x. \top$, 
+    	alternative: prove $F(\varphi)\vdash^{Coh(\varphi)}_{\set{\red{c}}}\bot$
+    	\item $\forall\red{x}.~( F(\exists x.~d(x)\to \forall y.d(y))) \imp 
+    	F(d(\red{x})\to \forall y.d(y)))$
+    	\item $\forall\red{x}.~(F(d(\red{x})\to \forall y.d(y)) \imp 
+    	(T(d(\red{x})) \wedge F(\forall y.d(y))))$
+    	\item $F(\forall y.d(y)) \imp \exists y. F(d(y))$
+    	\item $\forall x.~(T(d(x)) \wedge F(d(x))) \imp \bot$   	
+    \end{enumerate}
+    \item Proof: use 1 and get $c$, instantiate 2 and 3 with $c$
+    and get $T(d(c)) \wedge F(\forall y.d(y))$, so by 4 we get $c'$
+    with $F(d(c'))$, ...
+    \item Details on the blackboard    
+    \item Proof of $\varphi$ in FOL: take $T:\equiv\lambda\varphi.\,\varphi$,
+     $F:\equiv\lambda\varphi.\,\neg\varphi$. Then 1--5 are easy
+     (Tarski and classical), the CL proof is also a proof in FOL,
+     and we finish by RAA
+ \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Translation from FOL to CL (ctnd)}
+ \begin{itemize}[<+->]
+   \item Skolem (\red{1920}): Every FOL theory has a definitional 
+   extension that is equivalent to a $\forall\exists$ theory
+   \item Many variations possible (Polonsky, Dyckhoff \& Negri, Fisher, Mints)
+   \item Possible objectives: fewer new predicates, fewer CL axioms ...,
+   keeping a coherent axiom coherent
+   \item Polonsky proposed several improvements, starting from NNF,
+   flipping polarities, also using reversed tableaux rules
+   \item Dyckhoff \& Negri: add $T(\psi)(\vec{x}) \to \psi(\vec{x})$ 
+   and $(F(\psi)(\vec{x})\wedge \psi(\vec{x})) \to \bot$
+   for all atomic $\psi$ and obtain:
+   Every FOL theory has a positive semi-definitional extension 
+   that is equivalent to a CL theory
+   % new P such that P(x) -> \phi(x), examples above, D&N (xiv),(xv)
+   \item Consequences in CL are always constructive
+   \item Translation of FOL to CL contains many non-constructive steps,
+   often more than necessary
+ \end{itemize}
+\end{frame}
+
+\subsection{Evaluation of CL as a fragment of FOL}
+
+\begin{frame}
+\frametitle{Evaluation of CL as a fragment of FOL}
+ \begin{itemize}[<+->]   %  [<+-| alert@+>]
+  \item Constructive, with classical logic a conservative extension
+  \item Simpler metatheory: proof theory, completeness, 
+    conservativity of skolemization (elimination of $\exists$)
+  \item Applications to metamathematics: independence, decision problems
+  \item Other applications:
+   \begin{itemize}[<+->]   %  [<+-| alert@+>]
+    \item automated reasoning, supporting proof assistants 
+    \item model finding
+    \item constructive algebra
+   \end{itemize}
+ \end{itemize}
+\end{frame}
+
+
+\section{Automated reasoning in CL}
+
+\subsection{Automated reasoning}
+
+\begin{frame}
+\frametitle{Automated reasoning (AR)}
+ \begin{itemize}[<+->]   %  [<+-| alert@+>]
+  \item We focus on AR in (fragments of) FOL
+  \item There are dozens of FOL provers (Vampire wins CASC)
+  \item TPTP is a large database of AR problems (CNF/FOL/HOL)
+  \item Different branch of AR: model finding (SAT/CNF/FNT) 
+  \item There are a handful of CL provers (competitive on
+  CL problems, but not on FOL problems):
+  \begin{itemize}[<+->]
+   \item SATCHMO+ (Bry et al.)
+   \item Argo, Larus (Janicic et al.)   
+   \item Geo (Nivelle et al.)
+   \item Colog (Fisher)   
+   \item EYE (De Roo, semantic web) 
+  \end{itemize}
+  \item Most CL provers support only 0-ary function symbols
+  \item We describe later how to eliminate function symbols
+    %\item Janicic, Kordic (90s): geometry prover Euclid
+    %\item Abdennadher, Sch\"utz (90s): \alert CPUHR (\alert Constraints)
+    %\item B, Coquand, Fisher, Nivelle (00s): geometric/coh.\ logic
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Rationale for automated reasoning in CL}
+ \begin{itemize}[<+->] %[<+->]   %  [<+-| alert@+>]
+    \item Expressivity of CL is between CNF (resolution) and FOL
+    \item Different balance: expressivity versus efficiency
+    \item Skolemization (elimination of $\exists$) not necessary
+    \begin{itemize}
+       \item Skolemization makes the Herbrand Universe infinite
+       \item Why skolemize an axiom like $p(x,y)\to\exists z.~p(x,z)$?
+       \item Skolemization changes meaning (problematic for interactive
+       theorem proving, and for obtaining proof objects)
+       \item Skolem functions obfuscate symmetries (cf.\ $\diamond$-property)
+       \item \red{But}: skolemized proofs can be exponentially shorter!
+    \end{itemize}
+   \item Ground forward reasoning is very simple and intuitive,
+   proof objects can easily be obtained
+   \item \red{But}: non-ground proofs can be exponentially shorter!   
+ \end{itemize}
+\end{frame}
+
+
+
+ 
+\subsection{Elimination of function symbols}
+
+\begin{frame}
+\frametitle{Elimination of function symbols}
+ \begin{itemize}[<+->]
+  \item Idea: use the graph instead of the function, i.e.,
+  new $(n{+}1)$-predicates for $n$-ary functions, for example:
+   \begin{itemize}[<+->]
+    \item For constants: $c(x)$ (expressing $c=x$), 
+     axiom $\exists x.\,c(x)$
+    \item For unary functions: 
+    $s(x,y)$ (expressing $s(x)=y$), axiom $\exists y.\,s(x,y)$
+   \end{itemize} 
+   \item Example: the term $f(s(x),o)$ leads to a condition
+   $s(x,y)\land o(u)\land f(y,u,z)$ after which every occurrence of
+   $f(s(x),o)$ is replaced by $z$. Then $\forall\vec{x}.~(C \to D)$ becomes 
+   $\forall x,y,u,z,\vec{x}~(s(x,y)\land o(u)\land f(y,u,z)\land C'\to D')$ 
+   where $C',D'$ are the result of the substitution in $C$ and $D$.
+   \item Example: $a=b$ becomes $a(x) \land b(y) \to x=y$
+   \item Unicity, e.g., $c(x)\land c(y)\to x=y$, \alert{not} required!
+   (since the new conditions only occur in negative positions)
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Puzzle, formalized in CL with functions (Nivelle)} 
+ \begin{itemize}[<+->]
+     \item Can one color each
+     $n\in\nat$ either red or blue but not both such that, 
+     if $\red{n}$ is red, then $\blue{n{+}2}$ is blue, 
+     and if  $\blue{n}$ is blue, then $\red{n{+}1}$ is red?
+    \item No: consider $\red{0}?\blue{2}\red{3}\ldots$
+    and $\blue{0}\red{1}?\blue{3}\red{4}\ldots$
+    \item CL theory:
+    \begin{enumerate}
+       \item $r(x) \vee g(x)$ 
+       \item $r(x) \wedge g(x) \imp \bot$
+       \item $r(x) \imp g(s(s(x)))$ 
+       \item $g(x) \imp r(s(x))$
+     \end{enumerate}
+   \item Do we miss something?
+   \item Yes, domain non-empty: 
+    \begin{enumerate}       
+       \setcounter{enumi}{4}       
+       \item $\exists x.~\top$
+    \end{enumerate}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Puzzle, function eliminated}
+ \begin{itemize}[<+->]
+   \item See {\tt LABresources/hdn.in}
+    \begin{enumerate}
+      \item $r(x) \vee g(x)$ 
+      \item $r(x) \wedge g(x) \imp \bot$
+      \item $r(x) \wedge s(x,y) \wedge s(y,z) \imp g(z)$ 
+      \item $g(x) \wedge s(x,y) \imp r(y)$    
+      \item $\exists x.~\top$
+      \item $\exists y.\,s(x,y)$
+  \end{enumerate}
+  \item Solution of version of puzzle with the function:
+    \begin{itemize}
+    \item Note that the substitution principle is valid
+    \item Substitute $(s(x) = y)$ for $s(x,y)$ in 3,4,6:
+     \begin{itemize}
+     \item Regarding 6, $\exists y.\,s(x)=y$ is trivial   
+     \item Regarding 4, $g(x) \wedge s(x)=y \imp r(y)$ is 
+     equivalent to $g(x) \imp r(s(x))$
+     \item Similarly for 3 (and, in general, for any function)   
+     \end{itemize}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\subsection{Proof search strategies}
+
+\begin{frame}
+\frametitle{Depth-first proof search in CL}
+ \begin{itemize}[<+->]   %  [<+-| alert@+>]
+    \item Recall the tree construction on slide \ref{proofsearch}
+    \item Any open leaf is fine, so we always take the leftmost
+    \item What instance of which $\Gamma$-false axiom to pick?
+    \item NB two trees: derivation tree and the search space
+    organized as a tree
+    \item Depth-first search: pick always the first $\Gamma$-false 
+    axiom from the list, and use the `simplest' (`oldest') instance
+    \item Obviously incomplete, but often OK with
+    favourable ordering of coherent axioms:
+    \begin{enumerate}
+       \item Facts first, then Horn clauses ($\to$ goal first)
+       \item Disjunctive clauses (cause branching)
+       \item Existential axioms (cause new variables)
+       \item Disjunctive existential axioms (cause both, the worst)
+    \end{enumerate}
+    \item Example: $\exists y.\,s(x,y)$ should never be put first!
+ \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+%\frametitle{Example: Diamond property closed under reflexive closure}
+  \begin{columns}
+    \column{\dimexpr\paperwidth-10pt}
+    \small\verbatiminput{LABresources/dpe.in}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Breadth-first proof search in CL}
+ \begin{itemize}[<+->]   %  [<+-| alert@+>]
+  \item Recall: $\Gamma$ is the condition of the leaf node at hand 
+  \item Breadth-first search: collect all `simplest' instances  
+  of $\Gamma$-false axioms and use them exhaustively
+  \item Breadth-first search: complete, but often infeasible
+  \item With only constants, depth-first complete for forms 1 and 2
+  \item Depth-first search not complete for \red{one single existential} clause, subtle:
+\texttt{  p(a). p(b). q(b) -> goal. p(X),p(Y) -> dom(U),p(U),q(X),r(Y).}
+    \item Wanted: fair application of axioms of form 3 and 4 (sl.\ 21)
+    \item Cycling depth-first: depth-first for forms 1 and 2, plus cycling
+    through the (disjunctive) existential clauses, using instances
+    with the `oldest' constants first. Complete.
+ \end{itemize}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Automated reasoning in CL, conclusions}
+ \begin{itemize}[<+->]
+   \item Good start: Newman's Lemma (Bezem \& Coquand,'03)
+   \item Limited success in CASC: 50\% in FOF (Geo, Nivelle'06)
+   \item Readable proofs can be extracted from CL proofs
+   \item Highlight: Hessenberg's Theorem (B, Hendriks, JAR'08)
+   \item Promising: using SAT techniques (Janicic et al.)
+   %\item Colog:\\\url{www.csupomona.edu/~jrfisher/colog2012/}
+   \item A case study, if time allows: Newman's Lemma, stating
+   that, for any strongly terminating relation $r(x,y)$, if
+   $r$ is locally confluent, then $r$ is confluent.
+   Informal proof on blackboard, code in \texttt{nl.in}.
+   Many interesting aspects.
+ \end{itemize}
+\end{frame}
+
+
+\section{Applications of CL}
+
+\subsection{Proof assistants}
+
+\begin{frame}
+\frametitle{Proof assistants}
+ \begin{itemize}[<+->]   %  [<+-| alert@+>]
+    \item In proof assistants, proof objects are required
+    \item CL proofs are readable and easily convertable
+    \item Provers outputting proof objects:
+    \begin{itemize}
+       \item \texttt{cl.pl} (B, exports proofs to Coq, also used
+       to verify them)
+       \item \url{coherent} (Isabelle tactic, Berghofer)
+       \item ArgoCLP (Coq, Isar, natural language)
+    \end{itemize}
+    \item Modern automated support of proof assistants centers
+    around specialized tools for decidable fragments of FOL,
+    using SAT Modulo Theories-techniques. Very useful is, e.g.,
+    the tactic \texttt{lia} (linear arithmetic) in Coq.   
+ \end{itemize}
+\end{frame}
+
+\subsection{Model finding}
+
+\begin{frame}
+\frametitle{Model finding}
+ \begin{itemize}[<+->]   %  [<+-| alert@+>]
+    \item Satisfiability in FOL is co-RE, so restrict to finite models
+    \item Naive approach: try to find a model with 1 element,
+    then with 2 elements, and so on. Quantifiers $\forall,\exists$
+    are written out (`grounding'), and the resulting (rapidly growing)
+    propositions are fed to a SAT-solver
+    \item Many clever tricks can actually make this to work
+    \item CL proof search is not finite model complete: $\exists y.~s(x,y)$
+    \item Solution (Nivelle): use (exhaustively) old constants 
+    before you generate a new one + use lemma learning
+    %\item Complete, but lemma learning \red{absolutely necessary}!
+    \item Success in CASC'07: 81\% in FNT (Geo, Nivelle)\\
+             (Paradox, based on Minisat, winner with 85\%)
+    \item CL competitive on problems `too big to ground'
+    %\item Example: formal verification of a Kripke model for simplicial sets (B \& Coquand, TCS)
+ \end{itemize}
+\end{frame}              
+
+\subsection{Constructive algebra}
+
+\begin{frame}
+\frametitle{Constructive algebra}
+ \begin{itemize}[<+->]   %  [<+-| alert@+>]
+    \item Pioneers of applying CL/GL to constructve algebra:\\
+  Coste, Lombardi, Roy, %(Effective Nullstellens\"atze ...), 
+Coquand
+    \item Idea: making constructive sense of classical proofs by
+  exploiting that significant parts of algebra can be formalized in CL/GL
+    \item Barr's Theorem guarantees then that classical results are provable in CL/GL
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Algebraic theories in CL/GL}
+ \begin{itemize}[<+->]   %  [<+-| alert@+>]
+    \item Ring (commutative with $1\neq0$): equational axioms
+    \item Local ring: $%\forall x.~
+    \exists y.~(x\cdot y=1) \lor \exists y.~((1-x)\cdot y = 1)$
+    \item Field: $%\forall x.~
+    (x=0) \lor \exists y.~(x\cdot y=1)$ (makes $=$ decidable!)
+    \item Alg.\ closed: $%\forall x.~
+    \exists x.~x^{n+1}=a_0 + a_1 x + \cdots + a_n x^n $ (all $n\in\nat$),
+    so infinitely many coherent axioms
+    \item Positive formula using an infinite disjunction:
+    $\bigvee_{n\in\nat}\, 0= x^{n+1}$, expressing that $x$ is nilpotent
+
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Hilbert's Nullstellensatz}
+ \begin{itemize}[<+->]   %  [<+-| alert@+>]
+    \item Consider fields $k \subset K$ with $K$ algebraically closed.
+    Let $I$ be an ideal of $k[\vec x]$, and $V(I)$ the set of common zeros (Nullstellen)
+    in $K$ of the polynomials in $I$. Then: for any $p\in k[\vec x]$ such that
+    $p$ is zero on $V(I)$ there exists an $n$ such that $p^n \in I$.
+    \item Example: 
+  $\mathbb{Q} \subset \mathbb{C}$, $I=(x^4+2x^2+1)$, $p= x^5-x$, $p^2 \in I$
+    \item In its full generality, Hilbert's Nullstellensatz is a 
+    strong classical theorem, with lots of special cases and variations
+    \item Effective Nullstellensatz: \alert{compute} the $n$ such that $p^n \in I$
+    \item Dynamical method in algebra: Effective Nullstellensätze,
+    Coste, Lombardi, Roy, 2001 (Dynamic method = CL proof)
+
+ \end{itemize}
+\end{frame}
+
+\end{document}
+
+
+Betal papers
+
+Geometric resolution: A proof procedure based on finite model search
+H Nivelle, J Meng - International Joint Conference on Automated …, 2006 - Springer
+
+Th{\'e}ories coh{\'e}rentes et topos coh{\'e}rents,
+    M.-F.~Coste and M.~Coste, 1975.
+
+
+\begin{frame}
+\frametitle{Title}
+ \begin{itemize}[<+->]
+    \item 
+ \end{itemize}
+\end{frame}
+
+
+
