@@ -16,7 +16,7 @@
 \usepackage{verbatim}
 \usepackage{hyperref}
 \usepackage{graphics}
-
+\usepackage{comment}
 \usepackage{color}
 \newcommand{\blue}[1]{\textcolor{blue}{#1}}
 \newcommand{\red}[1]{\textcolor{red}{#1}}
@@ -53,16 +53,51 @@ DOI: {\tt 10.3233/FI-2019-1853})
 
 \frame{\titlepage}
 
-\section[Outline]{}
-\frame{\tableofcontents}
-
-
-\section{Crash course in Coherent Logic (CL)}
-
-\subsection{Basics}
 
 \begin{frame}
-\frametitle{Coherent logic preliminaries 1}
+\frametitle{Skolemization in classical FOL}
+\begin{itemize}[<+->]   %  [<+-| alert@+>]
+    \item
+Skolemization is the replacement of an axiom of the form
+\begin{equation}\label{allexist}
+\forall\vec{x}~\exists y~\phi(\vec{x},y)
+\end{equation}
+by one of the form
+\begin{equation}\label{allskol}
+\forall\vec{x}~\phi(\vec{x},f_\phi(\vec{x})),
+\end{equation}
+where $f_\phi$ is a fresh function symbol, also called a Skolem function.
+
+\item
+Skolem's Theorem (conservativity): consequences of (\ref{allskol}) not 
+containing $f_\phi$ already follow from (\ref{allexist}).
+\end{itemize} 
+\end{frame}
+
+\begin{frame}
+\frametitle{Skolem's Theorem in constructive FOL}
+
+\begin{itemize}[<+->]   %  [<+-| alert@+>]
+    \item
+Skolem's Theorem fails in constructive FOL=
+
+Consider the sentence (G.\ Mints)
+\begin{equation}\label{all2exist2}
+\forall x_1,x_2~\exists y_1,y_2. ~P(x_1,y_1) \land P(x_2,y_2) \land (x_1 = x_2 \to y_1 = y_2)
+\end{equation}
+Clearly, (\ref{all2exist2}) follows from $\forall{x}~P({x},f(x))$.
+However, (\ref{all2exist2}) does not follow from 
+$\forall{x}~\exists y~P({x},y)$. Intuition: you cannot choose the $y_i$'s
+correctly without knowing whether the $x_i$'s are equal or not.
+\item
+Skolem's Theorem holds in constructive FOL (Dowek \& Werner)
+\item What about coherent logic (CL) as a fragment of FOL= ?
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Coherent logic preliminaries}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
     \item Fix a finite first-order signature $\Sigma$
     \item Coherent implications (sentences): $\forall\vec{x}.~(C \to D)$ 
@@ -73,7 +108,7 @@ DOI: {\tt 10.3233/FI-2019-1853})
     \item Discuss: $\exists y.\top$ and $\exists y.\bot$ and
     $\forall y.\top$ and $\forall y.\bot$
     \item Full compliance with Tarski semantics if $\Sigma$ has a constant
-    (CL allows empty models by default)
+    or if the theory contains $\exists y.\top$
  \end{itemize}
 \end{frame}
 
@@ -95,10 +130,11 @@ DOI: {\tt 10.3233/FI-2019-1853})
     \exists y.~s(x,y)$ (who needs a function?)
     \item field theory: $%\forall x.~
     (x=0) \lor \exists y.~(x\cdot y=1)$
-    \item local ring: 
-    $\exists y.~(x\cdot y = 1) \lor (\exists y.~((1-x)\cdot y = 1)$
-    (equivalent to the more common: if $x+y$ is a unit, then $x$ is a
-    unit or $y$ is a unit).
+    \item \red{not} coherent: Mints' sentence above
+%    \item local ring: 
+%   $\exists y.~(x\cdot y = 1) \lor (\exists y.~((1-x)\cdot y = 1)$
+%   (equivalent to the more common: if $x+y$ is a unit, then $x$ is a
+%  unit or $y$ is a unit).    
  \end{itemize}
 \end{frame}
 
@@ -122,17 +158,16 @@ DOI: {\tt 10.3233/FI-2019-1853})
  \end{itemize}
 \end{frame}
 
-\subsection{Proof theory for CL}
-
 \begin{frame}
 \frametitle{A proof theory for CL}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
     \item In short: ground forward reasoning with case distinction and
     introduction of witnesses (ground tableau reasoning)
     \item In full: define inductively $\Gamma\vdash_{\vec{y}}^T A$, where 
-    $A$ ($\Gamma$) atom (set of atoms) with all variables in $\vec{y}$, in case
+    $A$ ($\Gamma$) atom (set of atoms) with all variables in $\vec{y}$, 
+    in the two cases:
     \begin{enumerate}
-    \item[(base)] $A$ is in $\Gamma$, or in case 
+    \item[(base)] $A$ is in $\Gamma$, or 
     \item[(step)] $T$ has an axiom $\forall\vec{x}.~
     (C \to (\exists\vec{y}_1.B_1) \lor \cdots \lor (\exists\vec{y}_k.B_k))$
     such that for some sequence of terms $\vec{t}$ with variables in $\vec{y}$
@@ -168,24 +203,61 @@ DOI: {\tt 10.3233/FI-2019-1853})
 \infer[p\to\bot]{\set{p}}{(\bot)} & \infer[q(y)\to r]{\set{q(c)}}{\set{q(c),r}}
 }
 \]
-    \item Tree construction: from $\emptyset$, repeat exhaustively 1,2,3 below
-    \begin{enumerate}
-    \item Pick a leaf node (${}\neq(\bot)$) without $A$ in its $\Gamma$ 
-    (else done)
-    \item Pick \red{fairly a $\Gamma$-false  instance} of an axiom of $T$
-    (else fail: $\Gamma$ is a model of $T$ not containing $A$, 
-    so $A$ is underivable)
-    \item Extend the tree in the leaf node according to the instance  
-    \end{enumerate}
-    \item Fairness is tricky to define, but crucial for the following
-    completeness result (to be proved on the next slide):
-    \item The tree construction stops in 1 iff $A$ is derivable (\red{if-part!})
-    \item Example for explaining un/fairness: $\exists y. s(x,y)$ and $p(0)$
+\item Soundness easily proved by induction on $\Gamma\vdash_{\vec{y}}^T A$
+    \item \red{Not} complete: $\emptyset\vdash_{\emptyset}^{\forall x.\bot} p$
+    underivable without a constant in $\Sigma$
+    \item Silly, let's assume a constant in $\Sigma$, or just $\exists x.\top$
+    \item Proof of completeness (cf.\ tableaux, essentially non- constructive):
+    Develop \red{fairly} the complete tree of possible derivations,
+    stopping if $\bot$ or $A$ shows up. Infinite branches are models 
+    of $\Gamma,\neg A$.
+    \item Can be extended to arbitrary coherent conclusions $A$.
  \end{itemize}
 \end{frame}
 
-\subsection{Metatheory}
 
+
+\begin{frame}
+\frametitle{Two inevitable lemmas}
+ \begin{itemize}[<+->]
+    \item Weakening:
+    \begin{lemma}\label{weak}
+If $\Gamma\vdash_{\vec{x}}^T A$, $\vec{x}\subseteq \vec{y}$, $\Gamma\subseteq \Sigma$ and all free variables of $\Sigma$ are in $\vec{y}$, then $\Sigma\vdash_{\vec{y}}^T A$.
+\end{lemma}
+\item Substitution:
+\begin{lemma}\label{subst1}
+If $|\vec{t}| =|\vec{x}|$ and the free variables of $\vec{t}$ are in $\vec{y}$, 
+then $\Gamma(\vec{t})\vdash_{\vec{y}}^T A(\vec{t})$ whenever
+$\Gamma(\vec{x})\vdash_{\vec{x}}^T A(\vec{x})$.
+\end{lemma}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Skolem constants}
+\begin{theorem}
+If $T,\Gamma,A$ do not mention $c$ and $\Gamma\vdash_{\vec{x}}^{T,\,P(c)} A$, then
+$\Gamma\vdash_{\vec{x}}^{T,\exists y P(y)} A$.
+\end{theorem}
+\begin{proof} 
+If $\Gamma\vdash_{\vec{x}}^{T,\,P(c)} A$, 
+then $\Gamma,P(c)\vdash_{\vec{x}}^{T,\,P(c)} A$
+by Lemma~\ref{weak}.
+From the resulting proof we can remove all applications of
+the axiom $\vdash P(c)$ since $P(c)$ does already occur on the left. 
+We then replace every occurrence of $c$ by a fresh variable $u$ and 
+get a proof of $\Gamma,P(u)\vdash_{\vec{x},u}^{T} A$.
+This substitution operation leaves $T,\Gamma,A$ unchanged
+since they do not mention $c$.
+It also replaces $c$ by $u$ in instantiations of axioms of $T$,
+so that we get a proof in $T$. Finally,
+by applying the axiom $\vdash\exists y P(y)$
+we get a proof of $\Gamma\vdash_{\vec{x}}^{T,\exists y P(y)} A$.
+\end{proof}
+\end{frame}
+
+
+\begin{comment}
 \begin{frame}
 \frametitle{Soundness and completeness wrt Tarski semantics}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
@@ -208,6 +280,7 @@ DOI: {\tt 10.3233/FI-2019-1853})
     conclusions of a coherent theory $T$.
  \end{itemize}
 \end{frame}
+\end{comment}
 
 \begin{frame}
 \frametitle{Metatheoretic results and remarks}
@@ -221,11 +294,10 @@ DOI: {\tt 10.3233/FI-2019-1853})
     constructively using a cut-elimination argument %(Coste \& Coste, Negri) 
     \item Coherent completeness wrt forcing semantics is constructively
     provable, but does not give the conservativity of classical reasoning
-    \item NB: the forcing semantics is sound wrt cosntructive logic 
-    for arbitrary formulas
- \end{itemize}
+  \end{itemize}
 \end{frame}
 
+\begin{comment}
 \subsection{Translation from FOL to CL}
 
 \begin{frame}
@@ -675,6 +747,8 @@ Coquand
 
  \end{itemize}
 \end{frame}
+
+\end{comment}
 
 \end{document}
 
