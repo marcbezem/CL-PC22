@@ -1,5 +1,7 @@
-\documentclass[handout,11pt]{beamer}
+\documentclass[handout,11pt,hyperref ={colorlinks = true, urlcolor = red}]{beamer}
 %\documentclass[slides]{beamer}
+%to get rid of undefined control sequence \Hy@colorlink add:
+\nonstopmode 
 
 %\usetheme{Warsaw}
 \usetheme{Montpellier}
@@ -12,9 +14,8 @@
 \usepackage{times}
 \usepackage[T1]{fontenc}
 \usepackage{proof}
-\usepackage{url}
 \usepackage{verbatim}
-\usepackage{hyperref}
+
 \usepackage{graphics}
 \usepackage{comment}
 \usepackage{color}
@@ -22,9 +23,12 @@
 \newcommand{\red}[1]{\textcolor{red}{#1}}
 \newcommand{\green}[1]{\textcolor{green}{#1}}
 
-%\usepackage[all]{xy}
-\usepackage{amssymb,amsmath}
 
+%\usepackage[all]{xy}
+%\usepackage{amssymb,amsmath}
+
+%\usepackage{url}
+%\usepackage{hyperref}
 
 \newtheorem{proposition}{Proposition}
 
@@ -42,8 +46,8 @@
 Department of Informatics\\
 University of Bergen
 \mbox{ }\\
-(jww Thierry Coquand, 2019,\\
-DOI: {\tt 10.3233/FI-2019-1853})
+(jww Thierry Coquand,\\
+\url{https://doi.org/10.3233/FI-2019-1853})
 }
 
 
@@ -72,7 +76,8 @@ where $f_\phi$ is a fresh function symbol, also called a Skolem function.
 Skolem's Theorem (conservativity): consequences of (\ref{allskol}) not 
 containing $f_\phi$ already follow from (\ref{allexist}).
 \item
-Goal: effective proof transformations (Maehara, 1955)
+Goal: effective proof transformations (Maehara, 1955),
+applications in ATP
 \end{itemize} 
 \end{frame}
 
@@ -83,7 +88,7 @@ Goal: effective proof transformations (Maehara, 1955)
     \item
 Skolem's Theorem fails in constructive FOL=
 
-Consider the sentence (G.\ Mints)
+Consider the following sentence (G.\ Mints):
 \begin{equation}\label{all2exist2}
 \forall x_1,x_2~\exists y_1,y_2. ~P(x_1,y_1) \land P(x_2,y_2) \land (x_1 = x_2 \to y_1 = y_2)
 \end{equation}
