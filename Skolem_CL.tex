@@ -60,17 +60,19 @@ DOI: {\tt 10.3233/FI-2019-1853})
     \item
 Skolemization is the replacement of an axiom of the form
 \begin{equation}\label{allexist}
-\forall\vec{x}~\exists y~\phi(\vec{x},y)
+\forall\vec{x}~\exists y.~\phi(\vec{x},y)
 \end{equation}
 by one of the form
 \begin{equation}\label{allskol}
-\forall\vec{x}~\phi(\vec{x},f_\phi(\vec{x})),
+\forall\vec{x}.~\phi(\vec{x},f_\phi(\vec{x})),
 \end{equation}
 where $f_\phi$ is a fresh function symbol, also called a Skolem function.
 
 \item
 Skolem's Theorem (conservativity): consequences of (\ref{allskol}) not 
 containing $f_\phi$ already follow from (\ref{allexist}).
+\item
+Goal: effective proof transformations (Maehara, 1955)
 \end{itemize} 
 \end{frame}
 
@@ -101,7 +103,11 @@ Skolem's Theorem holds in constructive FOL (Dowek \& Werner)
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
     \item Fix a finite first-order signature $\Sigma$
     \item Coherent implications (sentences): $\forall\vec{x}.~(C \to D)$ 
-    with $C,D$ positive formulas
+    with $C$ a conjunction of atoms and $D$ a disjunction of existentially
+    quantified conjunctions of atoms,
+\[  \forall\vec{x}.~ (\vec{A} \to 
+(\exists\vec{y}_1.\vec{B}_1) \lor \cdots \lor (\exists\vec{y}_k.\vec{B}_k))
+\]
     \item Coherent theory: axiomatized by coherent sentences
     \item Notation: we leave out the universal prefix, 
     and omit the premiss `$C\to{}$' if $C\equiv\top$
@@ -124,7 +130,7 @@ Skolem's Theorem holds in constructive FOL (Dowek \& Werner)
     p(x)\land p(y) \to \exists z.~\ell(z) \land i(x,z) \land i(y,z)$
     \item rewriting, $\diamond$-property: $%\forall x,y,z.~
     r(x,y)\land r(x,z) \to \exists u.~r(y,u)\land r(z,u)$
-    \item weak-tc-elim: $%\forall x,y.~
+    \item weak-${}^*$-elim: $%\forall x,y.~
     r^*(x,y)\to (x=y)\lor\exists z.~r(x,z)\land r^*(z,y)$     
     \item seriality: $%\forall x.~
     \exists y.~s(x,y)$ (who needs a function?)
@@ -162,7 +168,7 @@ Skolem's Theorem holds in constructive FOL (Dowek \& Werner)
 \frametitle{A proof theory for CL}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]
     \item In short: ground forward reasoning with case distinction and
-    introduction of witnesses (ground tableau reasoning)
+    introduction of witnesses (ground tableaux reasoning)
     \item In full: define inductively $\Gamma\vdash_{\vec{y}}^T A$, where 
     $A$ ($\Gamma$) atom (set of atoms) with all variables in $\vec{y}$, 
     in the two cases:
@@ -185,8 +191,8 @@ Skolem's Theorem holds in constructive FOL (Dowek \& Werner)
     \]
     \item NB we omit conclusion $A$ in all the nodes, 
     but we should actually keep track of the $\vec{y},\vec{y_i}$.
-    (In the forcing semantics, pairs like $(\vec{y};\Gamma)$ will be
-    the forcing conditions, $\approx$ finite Kripke worlds.)
+    (In some forcing semantics, pairs like $(\vec{y};\Gamma)$
+    are forcing conditions, $\approx$ finite Kripke worlds.)
  \end{itemize}
 \end{frame}
 
@@ -207,29 +213,11 @@ Skolem's Theorem holds in constructive FOL (Dowek \& Werner)
     \item \red{Not} complete: $\emptyset\vdash_{\emptyset}^{\forall x.\bot} p$
     underivable without a constant in $\Sigma$
     \item Silly, let's assume a constant in $\Sigma$, or just $\exists x.\top$
-    \item Proof of completeness (cf.\ tableaux, essentially non- constructive):
+    \item Proof of completeness (cf.\ tableaux, non-constructive):
     Develop \red{fairly} the complete tree of possible derivations,
     stopping if $\bot$ or $A$ shows up. Infinite branches are models 
-    of $\Gamma,\neg A$.
-    \item Can be extended to arbitrary coherent conclusions $A$.
- \end{itemize}
-\end{frame}
-
-
-
-\begin{frame}
-\frametitle{Two inevitable lemmas}
- \begin{itemize}[<+->]
-    \item Weakening:
-    \begin{lemma}\label{weak}
-If $\Gamma\vdash_{\vec{x}}^T A$, $\vec{x}\subseteq \vec{y}$, $\Gamma\subseteq \Sigma$ and all free variables of $\Sigma$ are in $\vec{y}$, then $\Sigma\vdash_{\vec{y}}^T A$.
-\end{lemma}
-\item Substitution:
-\begin{lemma}\label{subst1}
-If $|\vec{t}| =|\vec{x}|$ and the free variables of $\vec{t}$ are in $\vec{y}$, 
-then $\Gamma(\vec{t})\vdash_{\vec{y}}^T A(\vec{t})$ whenever
-$\Gamma(\vec{x})\vdash_{\vec{x}}^T A(\vec{x})$.
-\end{lemma}
+    of $\Gamma,\neg A$. (Can be adapted to arbitrary coherent $A$.)
+    \item So, classical logic is conservative over CL!
  \end{itemize}
 \end{frame}
 
@@ -237,12 +225,11 @@ $\Gamma(\vec{x})\vdash_{\vec{x}}^T A(\vec{x})$.
 \frametitle{Skolem constants}
 \begin{theorem}
 If $T,\Gamma,A$ do not mention $c$ and $\Gamma\vdash_{\vec{x}}^{T,\,P(c)} A$, then
-$\Gamma\vdash_{\vec{x}}^{T,\exists y P(y)} A$.
+$\Gamma\vdash_{\vec{x}}^{T,\exists y. P(y)} A$.
 \end{theorem}
 \begin{proof} 
 If $\Gamma\vdash_{\vec{x}}^{T,\,P(c)} A$, 
-then $\Gamma,P(c)\vdash_{\vec{x}}^{T,\,P(c)} A$
-by Lemma~\ref{weak}.
+then $\Gamma,P(c)\vdash_{\vec{x}}^{T,\,P(c)} A$ by weakening.
 From the resulting proof we can remove all applications of
 the axiom $\vdash P(c)$ since $P(c)$ does already occur on the left. 
 We then replace every occurrence of $c$ by a fresh variable $u$ and 
@@ -251,9 +238,27 @@ This substitution operation leaves $T,\Gamma,A$ unchanged
 since they do not mention $c$.
 It also replaces $c$ by $u$ in instantiations of axioms of $T$,
 so that we get a proof in $T$. Finally,
-by applying the axiom $\vdash\exists y P(y)$
-we get a proof of $\Gamma\vdash_{\vec{x}}^{T,\exists y P(y)} A$.
+by applying the axiom $\vdash\exists y. P(y)$
+we get a proof of $\Gamma\vdash_{\vec{x}}^{T,\exists y. P(y)} A$.
 \end{proof}
+\end{frame}
+
+\begin{frame}
+\frametitle{Beyond Skolem constants, escalation of technicalities}
+ \begin{itemize}[<+->]
+    \item We need to replace Skolem terms \red{by variables},
+    requiring a new set of `substitution' lemmas
+    \item Equality comes with an extra axiom in which the Skolem function
+    occurs, congruence    
+    \item Why only $\forall{x}~\exists y.~P({x},y)$ for atoms?
+    \begin{itemize}[<+->]
+    \item Must stay coherent, but need not be atom $P({x},y)$
+    \item Easy generalization to coherent conclusion format ($D$)
+    \item Unexplored: further generalization to coherent sentences
+    like in $\forall{x}~\exists y.~(A(x) \to P({x},y))$
+    \item Discuss: independence of premiss, Glivenko class
+    \end{itemize}
+ \end{itemize}
 \end{frame}
 
 
@@ -291,7 +296,7 @@ we get a proof of $\Gamma\vdash_{\vec{x}}^{T,\exists y P(y)} A$.
     (anticipated by Lawvere and Deligne)
     \item Completeness and Barr's Theorem are \alert{not} constructive
     \item Barr's Theorem for \red{coherent} logic can be proved 
-    constructively using a cut-elimination argument %(Coste \& Coste, Negri) 
+    constructively using a cut-elimination argument (Coste \& Coste, Negri) 
     \item Coherent completeness wrt forcing semantics is constructively
     provable, but does not give the conservativity of classical reasoning
   \end{itemize}
