@@ -215,9 +215,10 @@ Skolem's Theorem holds in constructive FOL (Dowek \& Werner)
 }
 \]
 \item Soundness easily proved by induction on $\Gamma\vdash_{\vec{y}}^T A$
-    \item \red{Not} complete: $\emptyset\vdash_{\emptyset}^{\forall x.\bot} p$
-    underivable without a constant in $\Sigma$
-    \item Silly, let's assume a constant in $\Sigma$, or just $\exists x.\top$
+    \item NB: $\emptyset\vdash_{\emptyset}^{\forall x.\bot} p$
+     not derivable without a constant in $\Sigma$
+    \item So, let's assume a constant in $\Sigma$ (or $\exists x.\top$,
+    or fix $\models_\text{Tarski}$)
     \item Proof of completeness (cf.\ tableaux, non-constructive):
     Develop \red{fairly} the complete tree of possible derivations,
     stopping if $\bot$ or $A$ shows up. Infinite branches are models 
@@ -260,7 +261,7 @@ we get a proof of $\Gamma\vdash_{\vec{x}}^{T,\exists y. P(y)} A$.
     \item Must stay coherent, but need not be atom $P({x},y)$
     \item Easy generalization to coherent conclusion format ($D$)
     \item Unexplored: further generalization to coherent sentences
-    like in $\forall{x}~\exists y.~(A(x) \to P({x},y))$
+    like in $\forall x.~(A(x) \to \exists y. P(x,y))$
     \item Discuss: independence of premiss, Glivenko class
     \end{itemize}
  \end{itemize}
