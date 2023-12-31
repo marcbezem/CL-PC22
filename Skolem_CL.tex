@@ -215,10 +215,10 @@ Skolem's Theorem holds in constructive FOL (Dowek \& Werner)
 }
 \]
 \item Soundness easily proved by induction on $\Gamma\vdash_{\vec{y}}^T A$
-    \item NB: $\emptyset\vdash_{\emptyset}^{\forall x.\bot} p$
+    \item NB: $\emptyset\vdash_{\emptyset}^{\forall x.\,p} p$
      not derivable without a constant in $\Sigma$
     \item So, let's assume a constant in $\Sigma$ (or $\exists x.\top$,
-    or fix $\models_\text{Tarski}$)
+    or use $\vdash_{\red{x},\vec{y}}$)
     \item Proof of completeness (cf.\ tableaux, non-constructive):
     Develop \red{fairly} the complete tree of possible derivations,
     stopping if $\bot$ or $A$ shows up. Infinite branches are models 
@@ -247,6 +247,28 @@ so that we get a proof in $T$. Finally,
 by applying the axiom $\vdash\exists y. P(y)$
 we get a proof of $\Gamma\vdash_{\vec{x}}^{T,\exists y. P(y)} A$.
 \end{proof}
+\end{frame}
+
+\begin{frame}
+\frametitle{Decent proof}
+Assume $T,\Gamma,A$ do not mention $c$.
+Prove each of the following steps by induction on derivation.
+    \[
+    \begin{alignat*}{4}
+    \Gamma&\vdash_{\vec{x}}^{T,\,P(c)}&& A  && \implies &&
+    \text{(by $\vdash$-weakening)} \\
+    \Gamma,P(c)&\vdash_{\vec{x}}^{T,\,P(c)} && A && \implies &&
+    \text{(still $c\in\Sigma$, but $c\notin T,\Gamma,A$)} \\
+    \Gamma,P(c)&\vdash_{\vec{x}}^{T} && A && \implies &&
+    \text{($u$ fresh, \red{$c:=u$}, now $c\notin \Sigma$)} \\
+    \Gamma,P(u)&\vdash_{\vec{x},\,u}^{T} && A && \implies &&
+    \text{(by $T$-weakening)} \\
+    \Gamma,P(u)&\vdash_{\vec{x},\,u}^{T,\,\exists y.P(y)} && A && \implies &&
+    \text{(by forward reasoning backwards)} \\
+    \Gamma&\vdash_{\vec{x}}^{T,\,\exists y.P(y)} &&A %&& \implies &&
+    %\text{(text)} \\
+    \end{alignat*}
+    \]    
 \end{frame}
 
 \begin{frame}
