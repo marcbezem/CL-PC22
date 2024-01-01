@@ -253,7 +253,6 @@ we get a proof of $\Gamma\vdash_{\vec{x}}^{T,\exists y. P(y)} A$.
 \frametitle{Decent proof}
 Assume $T,\Gamma,A$ do not mention $c$.
 Prove each of the following steps by induction on derivation.
-    \[
     \begin{alignat*}{4}
     \Gamma&\vdash_{\vec{x}}^{T,\,P(c)}&& A  && \implies &&
     \text{(by $\vdash$-weakening)} \\
@@ -268,7 +267,6 @@ Prove each of the following steps by induction on derivation.
     \Gamma&\vdash_{\vec{x}}^{T,\,\exists y.P(y)} &&A %&& \implies &&
     %\text{(text)} \\
     \end{alignat*}
-    \]    
 \end{frame}
 
 \begin{frame}
@@ -291,7 +289,7 @@ Prove each of the following steps by induction on derivation.
       \item Easy generalization to coherent conclusion format ($D$)
       \item Unexplored: further generalization to coherent sentences
       like $A \to \exists y. P(y)$ and
-           $\forall x.~(A(x) \to \exists y. Q(x,y))$
+           $\forall x.~(A(x) \to \exists y. P(x,y))$
       \item Discuss: non-empty domain, Independence of Premiss, Glivenko class
     \end{itemize}
     \item Analyze the length of skolemized vs.\ deskolemized derivations
