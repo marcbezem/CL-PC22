@@ -203,7 +203,7 @@ Skolem's Theorem holds in constructive FOL (Dowek \& Werner)
 
 
 \begin{frame}\label{proofsearch}
-\frametitle{Derivation trees in CL, example and general procedure}
+\frametitle{Derivation trees in CL, example and properties}
  \begin{itemize}[<+->]   %  [<+-| alert@+>]   
     \item Let $T$ consists of $p\lor \exists x.~q(x)$ 
     and $p\to\bot$ and $q(y)\to r$
@@ -223,7 +223,7 @@ Skolem's Theorem holds in constructive FOL (Dowek \& Werner)
     Develop \red{fairly} the complete tree of possible derivations,
     stopping if $\bot$ or $A$ shows up. Infinite branches are models 
     of $\Gamma,\neg A$. (Can be adapted to arbitrary coherent $A$.)
-    \item So, classical logic is conservative over CL!
+    \item So, classical logic is conservative over CL! (Better: Coste\&Coste, Negri)
  \end{itemize}
 \end{frame}
 
@@ -292,6 +292,7 @@ Prove each of the following steps by induction on derivation.
            $\forall x.~(A(x) \to \exists y. P(x,y))$
       \item Discuss: non-empty domain, Independence of Premiss, Glivenko class
     \end{itemize}
+    \item Faster inference (ground inference is slow: Horn counter)
     \item Analyze the length of skolemized vs.\ deskolemized derivations
  \end{enumerate}
 \end{frame}
