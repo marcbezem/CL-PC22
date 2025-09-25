@@ -15,7 +15,7 @@ jobs:
             Skolem_CL.tex
       - run: mkdir slides && cp Intro_CL.pdf Site_CL.pdf Skolem_CL.pdf slides
       - name: Upload artefact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: pdfs
           path: slides          
