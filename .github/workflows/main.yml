@@ -6,14 +6,14 @@ jobs:
     steps:
       - name: Set up git repository
         uses: actions/checkout@v3
-      - name: Compile LaTeX documents (currently 2)
+      - name: Compile LaTeX documents (currently 3)
         uses: xu-cheng/latex-action@v2
         with:
           root_file: |
             Intro_CL.tex
             Site_CL.tex
             Skolem_CL.tex
-      - run: mkdir slides && cp index.html Intro_CL.pdf Site_CL.pdf Skolem_CL.pdf slides
+      - run: mkdir slides && cp Intro_CL.pdf Site_CL.pdf Skolem_CL.pdf slides
       - name: Upload artefact
         uses: actions/upload-artifact@v3
         with:
