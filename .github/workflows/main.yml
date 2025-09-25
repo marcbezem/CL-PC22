@@ -13,7 +13,7 @@ jobs:
             Intro_CL.tex
             Site_CL.tex
             Skolem_CL.tex
-      - run: mkdir slides && touch index.html && cp index.html Intro_CL.pdf Site_CL.pdf Skolem_CL.pdf slides
+      - run: mkdir slides && cp index.html Intro_CL.pdf Site_CL.pdf Skolem_CL.pdf slides
       - name: Upload artefact
         uses: actions/upload-artifact@v3
         with:
