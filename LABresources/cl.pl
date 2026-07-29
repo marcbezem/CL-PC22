@@ -174,3 +174,20 @@ freport(X)     :- (X=[]->w1(nil);coq_dis(X)),fail. %fails to undo bindings
 
 %%%%%%%%%%%%%%%experimental
 
+tl_out :- proof(P), tl_out(P,[]).
+
+tl_out([],_) :- nl.
+tl_out([N|T],OldEnv) :-
+   %lookup lemma 
+   lemma(N,Env,(_:Conc)),
+   %compute Indent = length(Env)
+   length(Env,I),format(string(Indent), '~t~*|', [I]),
+   %comparing old and new environment, if extended insert a Case
+   (Env=[A|OldEnv] -> w3(Indent,'Case ',A),nl;true),
+   %elseif new head, then insert a Case
+   (Env=[A|E],OldEnv=[B|E],A\=B -> w3(Indent,'Case ',B),nl;true),
+   %write conclusion
+   w3(Indent,'Infer ',Conc),nl,
+ 
+   tl_out(T,Env).
+
