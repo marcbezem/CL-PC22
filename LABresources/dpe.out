@@ -1,0 +1,69 @@
+By assump using true we have:
+re(a,b) /\ re(a,c)
+By ref_e(a) using dom(a) we have:
+e(a,a)
+By ref_e(b) using dom(b) we have:
+e(b,b)
+By ref_e(c) using dom(c) we have:
+e(c,c)
+By e_in_re(a,a) using e(a,a) we have:
+re(a,a)
+By e_in_re(b,b) using e(b,b) we have:
+re(b,b)
+By e_in_re(c,c) using e(c,c) we have:
+re(c,c)
+By e_or_r(a,b) using re(a,b) we have:
+e(a,b) \/ r(a,b)
+
+stack pushed, stack: e(a,b) \/ r(a,b) :: nil
+
+stack top tailed: e(a,b)
+By sym_e(a,b) using e(a,b) we have:
+e(b,a)
+By congl(b,a,c) using e(b,a) /\ re(a,c) we have:
+re(b,c)
+By goal_ax(c) using re(b,c) /\ re(c,c) we have:
+goal
+
+valid, stack: r(a,b) :: nil
+
+stack popped: r(a,b)
+By e_or_r(a,c) using re(a,c) we have:
+e(a,c) \/ r(a,c)
+
+stack pushed, stack: e(a,c) \/ r(a,c) :: nil
+
+stack top tailed: e(a,c)
+By sym_e(a,c) using e(a,c) we have:
+e(c,a)
+By congl(c,a,b) using e(c,a) /\ re(a,b) we have:
+re(c,b)
+By goal_ax(b) using re(b,b) /\ re(c,b) we have:
+goal
+
+valid, stack: r(a,c) :: nil
+
+stack popped: r(a,c)
+By dp(a,b,b) using r(a,b) /\ r(a,b) we have:
+r(b,w_0) /\ r(b,w_0)
+By ref_e(w_0) using dom(w_0) we have:
+e(w_0,w_0)
+By e_in_re(w_0,w_0) using e(w_0,w_0) we have:
+re(w_0,w_0)
+By r_in_re(b,w_0) using r(b,w_0) we have:
+re(b,w_0)
+By dp(a,b,c) using r(a,b) /\ r(a,c) we have:
+r(b,w_1) /\ r(c,w_1)
+By ref_e(w_1) using dom(w_1) we have:
+e(w_1,w_1)
+By e_in_re(w_1,w_1) using e(w_1,w_1) we have:
+re(w_1,w_1)
+By r_in_re(b,w_1) using r(b,w_1) we have:
+re(b,w_1)
+By r_in_re(c,w_1) using r(c,w_1) we have:
+re(c,w_1)
+By goal_ax(w_1) using re(b,w_1) /\ re(c,w_1) we have:
+goal
+
+valid, stack: nil
+
