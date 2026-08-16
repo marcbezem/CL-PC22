@@ -186,8 +186,13 @@ tl_out([N|T],OldEnv) :-
    (Env=[A|OldEnv] -> w3(Indent,'Case ',A),nl;true),
    %elseif new head, then insert a Case
    (Env=[A|E],OldEnv=[B|E],A\=B -> w3(Indent,'Case ',B),nl;true),
-   %write conclusion
-   w3(Indent,'Infer ',Conc),nl,
- 
+   %write conclusion in TPTP-format
+   w2(Indent,'Infer '),
+   numbervars(Conc,0,_),
+   tptp_dis(Conc),nl,
+
    tl_out(T,Env).
+
+tptp_dis((C1;Cn)) :- !,w2(C1,'|'),tptp_dis(Cn).
+tptp_dis(C) :- w1(C).
 
