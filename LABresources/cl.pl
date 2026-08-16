@@ -161,10 +161,10 @@ io(Dest,Mode,Name,DO):-open(Dest,Mode,_,[alias(Name)]),
        (Mode=write->set_output(Name);set_input(Name)),DO,close(Name).
 test(File):- ext(File,in,Fi),cleanup,[Fi],valid0([],0,[],[],1,_),nl.
 out(Fi):-ext(Fi,out,Fo),io(Fo,write,out,test(Fi)).
-tptp(File):-ext(File,in,Fi),ext(File,p,Fo),cleanup,[Fi],io(Fo,write,tptp,tptp_out).
+tl(File):-ext(File,tl,Fo),io(Fo,write,tl,tl_out).
 prf(Fi):-ext(Fi,prf,Fo),io(Fo,write,prf,prf_out),prf_no.
 coq(Fi):-ext(Fi,v,Fv),assert(coqlog),io(Fv,write,coq,coq_out),retract(coqlog).
-run(File):-out(File),prf(File),coq(File).
+run(File):-out(File),prf(File),coq(File),tl(File).
 cleanup :- abolish(log/5),abolish(lemma/3),
            forall(dynamic_not_built_in(X),retractall(X)).
 dynamic_not_built_in(X) :- predicate_property(X,dynamic),\+predicate_property(X,built_in).
@@ -183,16 +183,22 @@ tl_out([N|T],OldEnv) :-
    %compute Indent = length(Env)
    length(Env,I),format(string(Indent), '~t~*|', [I]),
    %comparing old and new environment, if extended insert a Case
-   (Env=[A|OldEnv] -> w3(Indent,'Case ',A),nl;true),
+   (Env=[A|OldEnv] -> w2(Indent,'Case '),tptp_exi(A),nl;true),
    %elseif new head, then insert a Case
-   (Env=[A|E],OldEnv=[B|E],A\=B -> w3(Indent,'Case ',B),nl;true),
+   (Env=[A|E],OldEnv=[B|E],A\=B -> w2(Indent,'Case '),tptp_exi(A),nl;true),
    %write conclusion in TPTP-format
    w2(Indent,'Infer '),
-   numbervars(Conc,0,_),
    tptp_dis(Conc),nl,
 
    tl_out(T,Env).
 
-tptp_dis((C1;Cn)) :- !,w2(C1,'|'),tptp_dis(Cn).
-tptp_dis(C) :- w1(C).
+tptp_dis((D;Ds)) :-!,tptp_exi(D),w1(' | '),tptp_dis(Ds).
+tptp_dis(D) :- tptp_exi(D).
+
+tptp_exi((dom(Var),Cs)) :- var(Var),!,numbervars(Cs,0,_),w3('?',[Var], ': '),tptp_exi(Cs).
+tptp_exi((dom(par(N)),Cs)) :- !,w2(par(N),' : '), tptp_exi(Cs).
+tptp_exi(Cs) :- tptp_con(Cs).
+
+tptp_con((C,Cs)) :- !,w2(C,' & '),tptp_con(Cs).
+tptp_con(C) :- w1(C).
 
