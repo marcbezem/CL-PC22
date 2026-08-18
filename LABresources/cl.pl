@@ -161,7 +161,7 @@ io(Dest,Mode,Name,DO):-open(Dest,Mode,_,[alias(Name)]),
        (Mode=write->set_output(Name);set_input(Name)),DO,close(Name).
 test(File):- ext(File,in,Fi),cleanup,[Fi],valid0([],0,[],[],1,_),nl.
 out(Fi):-ext(Fi,out,Fo),io(Fo,write,out,test(Fi)).
-tl(File):-ext(File,tl,Fo),io(Fo,write,tl,tl_out).
+tl(Fi):-ext(Fi,tl,Fo),io(Fo,write,tl,tl_out).
 prf(Fi):-ext(Fi,prf,Fo),io(Fo,write,prf,prf_out),prf_no.
 coq(Fi):-ext(Fi,v,Fv),assert(coqlog),io(Fv,write,coq,coq_out),retract(coqlog).
 run(File):-out(File),prf(File),coq(File),tl(File).
@@ -183,22 +183,47 @@ tl_out([N|T],OldEnv) :-
    %compute Indent = length(Env)
    length(Env,I),format(string(Indent), '~t~*|', [I]),
    %comparing old and new environment, if extended insert a Case
-   (Env=[A|OldEnv] -> w2(Indent,'Case '),tptp_exi(A),nl;true),
+   (Env=[A|OldEnv] -> w2(Indent,'Case '),tl_exi(A),nl;true),
    %elseif new head, then insert a Case
-   (Env=[A|E],OldEnv=[B|E],A\=B -> w2(Indent,'Case '),tptp_exi(A),nl;true),
+   (Env=[A|E],OldEnv=[B|E],A\=B -> w2(Indent,'Case '),tl_exi(A),nl;true),
    %write conclusion in TPTP-format
    w2(Indent,'Infer '),
-   tptp_dis(Conc),nl,
+   tl_dis(Conc),nl,
 
    tl_out(T,Env).
 
-tptp_dis((D;Ds)) :-!,tptp_exi(D),w1(' | '),tptp_dis(Ds).
-tptp_dis(D) :- tptp_exi(D).
+tl_dis((D;Ds)) :-!,tl_exi(D),w1(' | '),tl_dis(Ds).
+tl_dis(D) :- tl_exi(D).
 
-tptp_exi((dom(Var),Cs)) :- var(Var),!,numbervars(Cs,0,_),w3('?',[Var], ': '),tptp_exi(Cs).
-tptp_exi((dom(par(N)),Cs)) :- !,w2(par(N),' : '), tptp_exi(Cs).
-tptp_exi(Cs) :- tptp_con(Cs).
+tl_exi((dom(Var),Cs)) :- var(Var),!,numbervars(Cs,0,_),w3('?',[Var], ': '),tl_exi(Cs).
+tl_exi((dom(par(N)),Cs)) :- !,w2(par(N),' : '), tl_exi(Cs).
+tl_exi(Cs) :- tl_con(Cs).
 
-tptp_con((C,Cs)) :- !,w2(C,' & '),tptp_con(Cs).
-tptp_con(C) :- w1(C).
+tl_con((C,Cs)) :- !,w2(C,' & '),tl_con(Cs).
+tl_con(C) :- w1(C).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%    tptp    %%%%%%%%%%%%%%%%%%%%%%%%%
+% as yet unpolished code
+
+tptp_out :- forall(
+((_ axiom X:(C=>Z)),numbervars(X:(C=>Z),0,_),del_dom(C,Y)),
+(w1('fof'),rndbra((X=..[H|T],w2(H,',axiom, '),
+(T=[]->true;w3('! ',T,' : ')),
+rndbra((
+(Y=true->true;rndbra(tptp_con(Y)),w1(' => ')),
+ rndbra(tptp_dis(Z))
+       ))
+)),w1('.'),nl
+)
+    /*end forall*/),
+w1('fof(goal_to_be_proved,conjecture,goal).'),nl.
+
+tptp_dis(D) :- D=(E;D1)->tptp_exi(E),w1(' | '),tptp_dis(D1)  ;tptp_exi(D).
+tptp_exi(E) :- E=false->w1(goal);E=(dom(Var),E1),\+atom(Var)->
+     w3('? ',[Var],' : '),tptp_exi(E1)     ;rndbra(tptp_con(E)).
+tptp_con(C) :- C=(F,C1)->tptp_ter(F),w1(' & '),tptp_con(C1)    ;tptp_ter(C).
+tptp_ter(F) :- F=..L,tptp_lis(L,L1),F1=..L1,w1(F1).
+tptp_lis([H|T],[H1|T1]):-(number(H)->atom_concat(n,H,H1);H=H1),tptp_lis(T,T1).
+tptp_lis([],[]).
+
 
