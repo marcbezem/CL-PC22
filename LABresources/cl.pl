@@ -167,7 +167,10 @@ coq(Fi):-ext(Fi,v,Fv),assert(coqlog),io(Fv,write,coq,coq_out),retract(coqlog).
 run(File):-out(File),prf(File),coq(File),tl(File).
 cleanup :- abolish(log/5),abolish(lemma/3),
            forall(dynamic_not_built_in(X),retractall(X)).
-dynamic_not_built_in(X) :- predicate_property(X,dynamic),\+predicate_property(X,built_in).
+dynamic_not_built_in(X) :- predicate_property(X,dynamic),
+                           predicate_property(X,file(F)),
+                           \+ sub_atom(F,_,_,_,'/swipl/library/'),
+                           \+ sub_atom(F,_,_,_,'/swipl/boot/').
  report(S)     :- numbervars(S,0,_),freport(S);nl. %freport reports and 
 freport([D|S]) :- !,coq_dis(D),w1(' :: '),freport(S).
 freport(X)     :- (X=[]->w1(nil);coq_dis(X)),fail. %fails to undo bindings
