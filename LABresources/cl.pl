@@ -165,12 +165,8 @@ tl(Fi):-ext(Fi,tl,Fo),io(Fo,write,tl,tl_out).
 prf(Fi):-ext(Fi,prf,Fo),io(Fo,write,prf,prf_out),prf_no.
 coq(Fi):-ext(Fi,v,Fv),assert(coqlog),io(Fv,write,coq,coq_out),retract(coqlog).
 run(File):-out(File),prf(File),coq(File),tl(File).
-cleanup :- abolish(log/5),abolish(lemma/3),
-           forall(dynamic_not_built_in(X),retractall(X)).
-dynamic_not_built_in(X) :- predicate_property(X,dynamic),
-                           predicate_property(X,file(F)),
-                           \+ sub_atom(F,_,_,_,'/swipl/library/'),
-                           \+ sub_atom(F,_,_,_,'/swipl/boot/').
+%cleanup does not clean up properly after failure
+cleanup :- abolish(log/5),abolish(lemma/3),abolish(proof/1),retractall(dom(_)).
  report(S)     :- numbervars(S,0,_),freport(S);nl. %freport reports and 
 freport([D|S]) :- !,coq_dis(D),w1(' :: '),freport(S).
 freport(X)     :- (X=[]->w1(nil);coq_dis(X)),fail. %fails to undo bindings
